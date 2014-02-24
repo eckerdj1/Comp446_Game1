@@ -15,8 +15,10 @@
 #include "GameTimer.h"
 #include "input.h"
 #include "graphics.h"
+#include "Text.h"
 #include <string>
 #include <sstream>
+
 
 
 class D3DApp
@@ -54,6 +56,9 @@ protected:
 
 	GameTimer mTimer;
 	Input* input;
+	Text timesNew;
+	Text arial;
+	Text roboto;
 
 	std::wstring mFrameStats;
  

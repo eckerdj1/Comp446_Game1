@@ -53,6 +53,7 @@ D3DApp::D3DApp(HINSTANCE hInstance)
 	mClearColor     = D3DXCOLOR(0.0f, 0.4f, 0.8f, 1.0f);
 	mClientWidth    = 800;
 	mClientHeight   = 600;
+	Text::device = 0;
 }
 
 D3DApp::~D3DApp()
@@ -120,9 +121,13 @@ void D3DApp::initApp()
     fontDesc.OutputPrecision = OUT_DEFAULT_PRECIS;
     fontDesc.Quality         = DEFAULT_QUALITY;
     fontDesc.PitchAndFamily  = DEFAULT_PITCH | FF_DONTCARE;
-    wcscpy(fontDesc.FaceName, L"Times New Roman");
+    wcscpy(fontDesc.FaceName, L"");
 
 	D3DX10CreateFontIndirect(md3dDevice, &fontDesc, &mFont);
+
+	timesNew.init(L"Times New Roman", 24);
+	arial.init(L"Arial", 24);
+	roboto.init(L"Roboto", 24);
 }
  
 void D3DApp::onResize()
@@ -473,6 +478,8 @@ void D3DApp::initDirect3D()
 			&sd,
 			&mSwapChain,
 			&md3dDevice) );
+
+	Text::setDevice(md3dDevice);
 
 
 	// The remaining steps that need to be carried out for d3d creation

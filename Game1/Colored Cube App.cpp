@@ -16,6 +16,7 @@
 #include "Quad.h"
 #include <d3dx9math.h>
 #include "LineObject.h"
+#include "Score.h"
 
 #include <ctime>
 #include <vector>
@@ -27,6 +28,7 @@ using std::srand;
 using std::rand;
 
 
+#define toString(x) Text::toString(x)
 
 class ColoredCubeApp : public D3DApp
 {
@@ -64,12 +66,13 @@ private:
 
 	int playerBlock;
 	int lives;
-	int score;
 	int ammo;
 	bool lifeGained;
 	bool activeMessage;
 	std::wstring message;
 	float messageTimer;
+
+	Score score;
 
 	bool gameOver;
 
@@ -199,7 +202,6 @@ void ColoredCubeApp::initApp()
 	
 	//player
 	playerBlock = 20;
-	score = 0;
 	ammo = 15;
 	lives = 3;
 	lifeGained = true;
@@ -319,14 +321,14 @@ void ColoredCubeApp::updateScene(float dt)
 							bullets[j].setInActive();
 							ammo++;
 							fallingBlocks[i].setInActive();
-							score++;
+							score.addPoints(1);
 							lifeGained = false;
 						}
 					}
 				}
 			}
 		}
-		if (!lifeGained && score % 100 == 0)
+		if (!lifeGained && score.getInt() % 100 == 0)
 		{
 			lives++;
 			lifeGained = true;
@@ -483,11 +485,14 @@ void ColoredCubeApp::drawScene()
 	std::wostringstream outs;  
 	
 	outs.precision(6);
-	outs << L"Lava Blocks Destroyed: " << score << L"\n";
+	string Hud = score.getString() + "\nBlobs Available: " + toString(ammo) + "\nGallons Left: " + toString(lives);
+
+	/*outs << score.getString() << L"\n";
 	outs << L"Blobs Available: " << ammo << L"\n";
 	outs << L"Gallons Left: " << lives;
 	std::wstring text = outs.str();
-	mFont->DrawText(0, text.c_str(), -1, &R, DT_NOCLIP, BLACK);
+	mFont->DrawText(0, text.c_str(), -1, &R, DT_NOCLIP, BLACK);*/
+	timesNew.draw(Hud, Vector2(5, 5));
 	if (gameOver)
 	{
 		mFont->DrawText(0, L"Game Over!", -1, &R1, DT_CENTER | DT_VCENTER, BLACK);

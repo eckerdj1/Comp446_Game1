@@ -4,6 +4,7 @@
 //Defines to make life easier
 
 #define Vector3 D3DXVECTOR3
+#define Vector2 D3DXVECTOR2
 #define Matrix D3DXMATRIX
 #define Identity D3DXMatrixIdentity
 #define Translate D3DXMatrixTranslation

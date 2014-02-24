@@ -97,6 +97,8 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineObject.cpp" />
     <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
@@ -109,7 +111,9 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineObject.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Quad.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>

@@ -130,6 +130,8 @@ const float INFINITY = FLT_MAX;
 const float PI       = 3.14159265358979323f;
 const float MATH_EPS = 0.0001f;
 
+#define DXColor D3DXCOLOR
+
 const D3DXCOLOR WHITE(1.0f, 1.0f, 1.0f, 1.0f);
 const D3DXCOLOR BLACK(0.0f, 0.0f, 0.0f, 1.0f);
 const D3DXCOLOR RED(1.0f, 0.0f, 0.0f, 1.0f);
