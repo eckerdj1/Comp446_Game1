@@ -11,7 +11,6 @@ Text::Text()
 }
 Text::~Text()
 {
-	ReleaseCOM(device);
 	ReleaseCOM(font);
 }
 
