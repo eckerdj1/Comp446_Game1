@@ -56,6 +56,7 @@ private:
 	vector<GameObject> fallingBlocks;
 	vector<GameObject> floor;
 	vector<GameObject> bullets;
+	vector<Box*> floorBoxes;
 	LineObject xLine, yLine, zLine;
 	Vector3 left, right, forward, back, up, down, zero;
 
@@ -73,6 +74,8 @@ private:
 	float elapsed;
 	float bulletElapsed;
 	float bulletsPerSecond;
+
+	float floorSectionLength;
 	
 
 	int playerBlock;
@@ -168,17 +171,17 @@ void ColoredCubeApp::initApp()
 
 	////// New Stuff added by Steve //////
 	numberOfObstacles = 40;
-	playerBox.init(md3dDevice, 3.0f, WHITE);
-	player.init(&playerBox, sqrt(6.0f), Vector3(0, 0, 0), Vector3(0, 0, 0), 10, 15.0f);
+	float obstacleScale = 2.5f;
+	playerBox.init(md3dDevice, obstacleScale, WHITE);
+	player.init(&playerBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, 0), Vector3(0, 0, 0), 10, 0);
 	player.linkInput(input);
 
 	int posZ = 0;
 	int posX = 0;
 	int chance = 0;
 	int r = 0;
-	float obstacleScale = 2.5f;
 
-	obstacleBox.init(md3dDevice, obstacleScale, RED);
+	obstacleBox.init(md3dDevice, obstacleScale, GREEN);
 	for (int i = 0; i < numberOfObstacles; i++) {
 		Obstacle newObstacle;
 		if ((i%5) == 0) {
@@ -301,33 +304,36 @@ void ColoredCubeApp::initApp()
 	gameObject2.init(&redBox, sqrt(2.0f), Vector3(4,0,0), Vector3(0,0,0), 0,1);
 	gameObject3.init(&redBox, sqrt(2.0f), Vector3(-4,0,0), Vector3(0,0,0), 0,1);
 
-	//falling blocks
-	Box* b;
-	for (int i=0; i<70; ++i)
-	{
-		if(rand() % 2 == 0)
-			b = &crimBox;
-		else
-			b = &dRedBox;
-
-		GameObject o;
-		o.init(b, sqrt(1.6f), Vector3(0,0,0), Vector3(0,-1,0), 0,1);
-		o.setInActive();
-		fallingBlocks.push_back(o);
-	}
 
 	////fall variables
 	//fallRatePerSecond = 0.5f;
 	//avgFallSpeed = 3.0f;
 	//elapsed = 0.0f;
 
-	////floor
-	//for (int i=0; i<40; ++i)
-	//{
-	//	GameObject o;
-	//	o.init(&blueBox, sqrt(2.0f), Vector3(-40 + 2 * i,-15,0), Vector3(0,0,0), 0,1);
-	//	floor.push_back(o);
-	//}
+	//floor
+	Box *b1, *b2, *b3, *b4;
+	b1 = new Box();
+	b2 = new Box();
+	b3 = new Box();
+	b4 = new Box();
+	floorSectionLength = 40.0f;
+	b1->init(md3dDevice, 15.0f, 1.0f, floorSectionLength / 2.0f, BLUE, BLUE);
+	b2->init(md3dDevice, 15.0f, 1.0f, floorSectionLength / 2.0f, BLUE, RED);
+	b3->init(md3dDevice, 15.0f, 1.0f, floorSectionLength / 2.0f, RED, RED);
+	b4->init(md3dDevice, 15.0f, 1.0f, floorSectionLength / 2.0f, RED, BLUE);
+	floorBoxes.push_back(b1);
+	floorBoxes.push_back(b2);
+	floorBoxes.push_back(b3);
+	floorBoxes.push_back(b4);
+
+	for (int i=0; i<4; ++i)
+	{
+		GameObject o;
+		Box* b;
+		b = (i == 0? b1 : (i == 1? b2 : (i == 2? b3 : b4)));
+		o.init(b, sqrt(2.0f), Vector3(0, -2, 15 + floorSectionLength * i), Vector3(0,0,-1), 25,1);
+		floor.push_back(o);
+	}
 
 	////bullets
 	//for (int i=0; i<15; ++i)
@@ -507,10 +513,19 @@ void ColoredCubeApp::updateScene(float dt)
 		obstacles[i].update(dt);
 	}
 	//////////////////////////////////////
+	// Floor test code //
+
 
 
 	for (int i=0; i<floor.size(); ++i)
+	{
 		floor[i].update(dt);
+		float zPos = floor[i].getPosition().z;
+		if (zPos < -50)
+			floor[i].setPosition(Vector3(0, -2, zPos + floor.size() * floorSectionLength));
+	}
+
+	
 
 	// Build the view matrix.
 	D3DXVECTOR3 pos(0.0f,45.0f,-50.0f);
@@ -614,18 +629,16 @@ void ColoredCubeApp::drawScene()
 	//	fallingBlocks[i].draw();
 	//}
 
-	////draw the floor
-	//for (int i=0; i<floor.size(); ++i)
-	//{
-	//	foo[0] = 0;
-	//	if (i == playerBlock)
-	//		foo[0] = 2;
-	//	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//	mWVP = floor[i].getWorldMatrix() * mView * mProj;
-	//	mfxWVPVar->SetMatrix((float*)&mWVP);
-	//	floor[i].setMTech(mTech);
-	//	floor[i].draw();
-	//}
+	//draw the floor
+	for (int i=0; i<floor.size(); ++i)
+	{
+		foo[0] = 0;
+		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
+		mWVP = floor[i].getWorldMatrix() * mView * mProj;
+		mfxWVPVar->SetMatrix((float*)&mWVP);
+		floor[i].setMTech(mTech);
+		floor[i].draw();
+	}
 
 	////// New Stuff added by Steve //////
 	mWVP = player.getWorldMatrix()  *mView*mProj;
