@@ -96,6 +96,8 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineObject.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -112,6 +114,8 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineObject.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Score.h" />

@@ -17,6 +17,8 @@
 #include <d3dx9math.h>
 #include "LineObject.h"
 #include "Score.h"
+#include "Player.h"
+#include "Obstacle.h"
 
 #include <ctime>
 #include <vector>
@@ -56,6 +58,14 @@ private:
 	vector<GameObject> bullets;
 	LineObject xLine, yLine, zLine;
 	Vector3 left, right, forward, back, up, down, zero;
+
+
+	////// New Stuff added by Steve //////
+	Box playerBox;
+	Player player;
+	Box obstacleBoxes[40];
+	Obstacle obstacles[40];
+	//////////////////////////////////////
 	
 	float fallRatePerSecond;
 	float avgFallSpeed;
@@ -155,6 +165,155 @@ void ColoredCubeApp::initApp()
 
 	line.init(md3dDevice, 10.0f, GREEN);
 
+	////// New Stuff added by Steve //////
+	playerBox.init(md3dDevice, 3.0f, WHITE);
+	player.init(&playerBox, sqrt(6.0f), Vector3(0, 0, 0), Vector3(0, 0, 0), 10, 3);
+
+	int posZ = 0;
+	int posX = 0;
+	int chance = 0;
+	int r = 0;
+
+	for (int i = 0; i < 40; i++) {
+		obstacleBoxes[i].init(md3dDevice, 3.0f, RED);
+
+		if ((i%5) == 0) {
+			posZ = rand()%150;
+			posZ += 200;
+			posX = rand()%20;
+			chance = rand()%2;
+			if (chance) {
+				posX *= -1;
+			}
+			r = rand()%5;
+			switch(r) {
+				case 0:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 1:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 2:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(0, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 3:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 4:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+			}
+		}
+		if ((i%5) == 1) {
+			int posZ = rand()%150;
+			posZ += 400;
+			posX = rand()%20;
+			chance = rand()%2;
+			if (chance) {
+				posX *= -1;
+			}
+			r = rand()%5;
+			switch(r) {
+				case 0:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 1:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 2:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(0, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 3:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 4:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+			}
+		}
+		if ((i%5) == 2) {
+			int posZ = rand()%150;
+			posZ += 600;
+			posX = rand()%20;
+			chance = rand()%2;
+			if (chance) {
+				posX *= -1;
+			}
+			r = rand()%5;
+			switch(r) {
+				case 0:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 1:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 2:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(0, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 3:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 4:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+			}
+		}
+		if ((i%5) == 3) {
+			int posZ = rand()%150;
+			posZ += 700;
+			posX = rand()%20;
+			chance = rand()%2;
+			if (chance) {
+				posX *= -1;
+			}
+			r = rand()%5;
+			switch(r) {
+				case 0:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 1:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 2:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(0, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 3:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 4:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+			}
+		}
+		if ((i%5) == 4) {
+			int posZ = rand()%150;
+			posZ += 800;
+			posX = rand()%20;
+			chance = rand()%2;
+			if (chance) {
+				posX *= -1;
+			}
+			r = rand()%5;
+			switch(r) {
+				case 0:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 1:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 2:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(0, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 3:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(6, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+				case 4:
+					obstacles[i].init(&obstacleBoxes[i], sqrt(6.0f), Vector3(12, 0, posZ), Vector3(0, 0, -5), 5, 3);
+					break;
+			}
+		}
+	}
+	//////////////////////////////////////
 
 
 	gameObject1.init(&whiteBox, sqrt(2.0f), Vector3(-10,0,0), Vector3(0,0,0), 0,1);
@@ -355,14 +514,21 @@ void ColoredCubeApp::updateScene(float dt)
 		}
 	}
 
+	////// New Stuff added by Steve //////
+	player.move();
+	player.update(dt);
 
+	for (int i = 0; i < 40; i++) {
+		obstacles[i].update(dt);
+	}
+	//////////////////////////////////////
 
 
 	for (int i=0; i<floor.size(); ++i)
 		floor[i].update(dt);
 
 	// Build the view matrix.
-	D3DXVECTOR3 pos(0.0f,0.0f,-50.0f);
+	D3DXVECTOR3 pos(0.0f,45.0f,-50.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&mView, &pos, &target, &up);
@@ -475,6 +641,21 @@ void ColoredCubeApp::drawScene()
 		floor[i].setMTech(mTech);
 		floor[i].draw();
 	}
+
+	////// New Stuff added by Steve //////
+	mWVP = player.getWorldMatrix()  *mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	player.setMTech(mTech);
+	player.draw();
+
+	for (int i = 0; i < 40; i++) {
+		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
+		mWVP = obstacles[i].getWorldMatrix() * mView * mProj;
+		mfxWVPVar->SetMatrix((float*)&mWVP);
+		obstacles[i].setMTech(mTech);
+		obstacles[i].draw();
+	}
+	//////////////////////////////////////
 
 
 	// We specify DT_NOCLIP, so we do not care about width/height of the rect.

@@ -8,11 +8,13 @@
 #define Matrix D3DXMATRIX
 #define Identity D3DXMatrixIdentity
 #define Translate D3DXMatrixTranslation
+#define Scale D3DXMatrixScaling
 #define RotateX D3DXMatrixRotationX
 #define RotateY D3DXMatrixRotationY
 #define RotateZ D3DXMatrixRotationZ
 #define ToRadian D3DXToRadian
 #define ToDegree D3DXToDegree
+#define Normalize D3DXVec3Normalize;
 
 //-----------------------------------------------
 // Useful macros
