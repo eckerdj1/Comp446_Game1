@@ -23,6 +23,8 @@ void Box::init(ID3D10Device* device, float scale, D3DXCOLOR c)
 	mNumFaces    = 12; // 2 per quad
 
 	// Create vertex buffer
+	color1 = c;
+	color2 = c;
     Vertex vertices[] =
     {
 		{D3DXVECTOR3(-1.0f, -1.0f, -1.0f), c},
@@ -100,6 +102,8 @@ void Box::init(ID3D10Device* device, float scale)
 	mNumFaces    = 12; // 2 per quad
 
 	// Create vertex buffer
+	color1 = WHITE;
+	color2 = WHITE;
     Vertex vertices[] =
     {
 		{D3DXVECTOR3(-1.0f, -1.0f, -1.0f), WHITE},
@@ -178,6 +182,8 @@ void Box::init(ID3D10Device* device, float sX, float sY, float sZ, D3DXCOLOR c1,
 	mNumFaces    = 12; // 2 per quad
 
 	// Create vertex buffer
+	color1 = c1;
+	color2 = c2;
     Vertex vertices[] =
     {
 		{D3DXVECTOR3(-1.0f, -1.0f, -1.0f), c1},
@@ -265,6 +271,8 @@ void Box::draw()
 }
 
 void Box::setVertexColor(DXColor c1,DXColor c2) {
+	color1 = c1;
+	color2 = c2;
 	Vertex vertices[] =
     {
 		{D3DXVECTOR3(-1.0f, -1.0f, -1.0f), c1},

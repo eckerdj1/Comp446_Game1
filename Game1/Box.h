@@ -26,6 +26,7 @@ private:
 	DWORD mNumFaces;
 
 	float scaleX, scaleY, scaleZ;
+	DXColor color1, color2;
 
 	ID3D10Device* md3dDevice;
 	ID3D10Buffer* mVB;
