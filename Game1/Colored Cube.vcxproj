@@ -99,6 +99,7 @@
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TileObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="TileObject.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
