@@ -6,11 +6,9 @@ class TileObject : public GameObject {
 
 public:
 	
+	DXColor color1, color2;
 
-
-
-
-
+	void changeColors(DXColor c1, DXColor c2);
 
 
 

@@ -44,9 +44,10 @@ public:
 	void normlizeVelocity();
 	float getBoxBottom();
 
+protected:
+		Box *box;
 
 private:
-	Box *box; 
 	Vector3 position;
 	Vector3 velocity;
 	float speed;
