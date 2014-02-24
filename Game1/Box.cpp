@@ -301,3 +301,10 @@ void Box::setVertexColor(DXColor c1,DXColor c2) {
     vinitData.pSysMem = vertices;
     HR(md3dDevice->CreateBuffer(&vbd, &vinitData, &mVB));
 }
+
+DXColor Box::getColor1() {
+	return color1;
+}
+DXColor Box::getColor2() {
+	return color2;
+}

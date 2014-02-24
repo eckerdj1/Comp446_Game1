@@ -19,7 +19,9 @@ public:
 	void init(ID3D10Device* device, float sX, float sY, float sZ, D3DXCOLOR c1, D3DXCOLOR c2);
 	void draw();
 
-	void setVertexColor(DXColor c1,DXColor c2) ;
+	void setVertexColor(DXColor c1,DXColor c2);
+	DXColor getColor1();
+	DXColor getColor2();
 
 private:
 	DWORD mNumVertices;
