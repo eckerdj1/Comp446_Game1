@@ -39,6 +39,12 @@ const UCHAR ALT_KEY      = VK_MENU;     // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 const UCHAR PlayerLeftKey = 0x41;		// A
 const UCHAR PlayerRightKey = 0x44;		// D
+const UCHAR PlayerRUpKey = 0x55;		// U
+const UCHAR PlayerGUpKey = 0x49;		// I
+const UCHAR PlayerBUpKey = 0x4F;		// O
+const UCHAR PlayerRDownKey = 0x4A;		// J
+const UCHAR PlayerGDownKey = 0x4B;		// K
+const UCHAR PlayerBDownKey = 0x4C;		// L
 
 //-----------------------------------------------
 //                  Constants
