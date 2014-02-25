@@ -478,6 +478,7 @@ void ColoredCubeApp::updateScene(float dt)
 	player.update(dt);
 
 	for (int i = 0; i < 40; i++) {
+		obstacles[i].setSpeed(floor.getSpeed());
 		obstacles[i].update(dt);
 	}
 
