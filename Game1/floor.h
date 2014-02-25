@@ -1,3 +1,5 @@
+//Andy Miller
+
 #ifndef FLOOR_H
 #define FLOOR_H
 
@@ -21,6 +23,9 @@ private:
 
 	float length;
 	float width;
+	float thick;
+
+	DXColor color1, color2;
 
 	vector<Box*> boxes;
 	vector<GameObject> boxObjects;

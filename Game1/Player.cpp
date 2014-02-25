@@ -2,6 +2,7 @@
 
 Player::Player()
 {	
+	color = BLACK;
 	speed = 0;
 	active = true;
 	Identity(&world);
@@ -54,6 +55,13 @@ void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, float s)
 
 void Player::update(float dt)
 {
+	if(input->wasKeyPressed(0x42)) {
+		color.r  += .05f;
+		if (color.r > 1)
+			color.r = 0.f;
+	}
+	box->setVertexColor(color, color);
+
 	if (!active)
 		return;
 	if (fabs(position.x - movingTo) > laneFudgeFactor)

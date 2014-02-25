@@ -39,6 +39,8 @@ private:
 	float height;
 	float width;
 
+	DXColor color;
+	
 	//Daniel Ecker
 	Input* input;
 	int lane, oldLane;
