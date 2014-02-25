@@ -15,6 +15,11 @@ public:
 	Floor();
 
 	void init(ID3D10Device* device);
+	void setSpeed(float s) {floorSpeed = s;}
+	float getSpeed() {return floorSpeed;}
+
+	void update(float dt);
+	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
 
 	DXColor getColor1();
 	DXColor getColor2();
@@ -22,14 +27,25 @@ public:
 private:
 
 	float length;
+	int solidLengthSpan, gradientLengthSpan;
+	float solidMinLength, gradientMinLength;
 	float width;
-	float thick;
+	float height;
+	float floorSpeed;
 
-	DXColor color1, color2;
-
-	vector<Box*> boxes;
-	vector<GameObject> boxObjects;
+	Box* getNewBox();
 	
+	float screenLength, currentLength;
+	float getRandomRGB(float cSet = 2000.0f);
+
+	DXColor nextColor, currentColor, previousColor;
+
+	vector<Box*> coloredBoxes;
+	vector<GameObject> floor;
+	
+	ID3D10Device* device;
+	// For draw
+	D3DXMATRIX mWVP;
 
 };
 

@@ -19,6 +19,7 @@ public:
 	void draw();
 	void update(float dt);
 
+	void setBox(Box* b) {box = b;}
 	void setPosition (Vector3 pos) {position = pos;}
 	Vector3 getPosition() {return position;}
 	void setVelocity (Vector3 vel) {velocity = vel;}
@@ -43,6 +44,7 @@ public:
 	bool isAbove(GameObject *gameObject);
 	void normlizeVelocity();
 	float getBoxBottom();
+	void deleteBox();
 
 protected:
 		Box *box;

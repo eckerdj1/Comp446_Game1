@@ -117,3 +117,8 @@ void GameObject::normlizeVelocity()
 	if (velocity.z != 0)
 		velocity.z /= fabs(velocity.z);
 }
+
+void GameObject::deleteBox()
+{
+	box = 0;
+}
