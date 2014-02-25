@@ -67,6 +67,7 @@ private:
 	int numberOfObstacles;
 	Box obstacleBox;
 	vector<Obstacle> obstacles;
+	Line rLine, gLine, bLine;
 	//////////////////////////////////////
 	
 	float fallRatePerSecond;
@@ -170,6 +171,17 @@ void ColoredCubeApp::initApp()
 	line.init(md3dDevice, 10.0f, GREEN);
 
 	////// New Stuff added by Steve //////
+	gLine.init(md3dDevice, 10.0f, GREEN);
+	rLine.init(md3dDevice, 10.0f, RED);
+	bLine.init(md3dDevice, 10.0f, BLUE);
+	xLine.init(&rLine, Vector3(0,0,0), 10);
+	xLine.setPosition(Vector3(0,0,0));
+	yLine.init(&gLine, Vector3(0,0,0), 10);
+	yLine.setPosition(Vector3(0,0,0));
+	yLine.setRotationZ(ToRadian(90));
+	zLine.init(&bLine, Vector3(0,0,0), 10);
+	zLine.setPosition(Vector3(0,0,0));
+	zLine.setRotationY(ToRadian(90));
 	numberOfObstacles = 40;
 	float obstacleScale = 2.5f;
 	playerBox.init(md3dDevice, obstacleScale, WHITE);
@@ -512,6 +524,10 @@ void ColoredCubeApp::updateScene(float dt)
 	for (int i = 0; i < 40; i++) {
 		obstacles[i].update(dt);
 	}
+
+	xLine.update(dt);
+	yLine.update(dt);
+	zLine.update(dt);
 	//////////////////////////////////////
 	// Floor test code //
 
@@ -653,6 +669,24 @@ void ColoredCubeApp::drawScene()
 		obstacles[i].setMTech(mTech);
 		obstacles[i].draw();
 	}
+
+
+	mWVP = zLine.getWorldMatrix() *mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	zLine.setMTech(mTech);
+	zLine.draw();
+
+	mWVP = yLine.getWorldMatrix() *mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	yLine.setMTech(mTech);
+	yLine.draw();
+
+	mWVP = xLine.getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	xLine.setMTech(mTech);
+	xLine.draw();
+
+	
 	//////////////////////////////////////
 
 	/////Text Drawing Section
