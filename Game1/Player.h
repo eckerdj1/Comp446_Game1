@@ -39,7 +39,12 @@ private:
 	float height;
 	float width;
 
+	//Andy Miller
 	DXColor color;
+	float wheelVal; //between 0.0f and 6.0f
+	void colorShiftUp(float x);
+	void colorShiftDown(float x);
+
 	
 	//Daniel Ecker
 	Input* input;

@@ -2,7 +2,11 @@
 
 Player::Player()
 {	
-	color = BLACK;
+	wheelVal = 0.0f;
+	color.r = 1.0f;
+	color.g = 0.0f;
+	color.b = 0.0f;
+
 	speed = 0;
 	active = true;
 	Identity(&world);
@@ -55,7 +59,15 @@ void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, float s)
 
 void Player::update(float dt)
 {
-	float changeBy = 0.02f;
+	float changeBy = 0.05f;
+	if(input->wasKeyPressed(0x4A)) {
+		colorShiftUp(changeBy);
+	}
+	if(input->wasKeyPressed(0x4C)) {
+		colorShiftDown(changeBy);
+	}
+
+	/*
 	///Red value up/down
 	if(input->isKeyDown(PlayerRUpKey)) {
 		color.r  += changeBy;
@@ -100,9 +112,9 @@ void Player::update(float dt)
 			color.b = 1.0f;
 		if (color.b < 0)
 			color.b = 0.0f;
-	}
+	}*/	
 	box->setVertexColor(color, color);
-
+	
 	if (!active)
 		return;
 	if (fabs(position.x - movingTo) > laneFudgeFactor)
@@ -176,4 +188,79 @@ void Player::normalizeDirection()
 {
 	float length = sqrt(D3DXVec3LengthSq(&direction));
 	direction = direction / length;
+}
+
+//Andy Miller
+void Player::colorShiftUp(float x) {
+	wheelVal += x;
+	if(wheelVal > 6.0f)
+		wheelVal -= 6.0f;
+
+	if(wheelVal > 0.0f && wheelVal < 1.0f) {
+		color.r = 1.0f;
+		color.g = wheelVal;
+		color.b = 0.0f;
+	}
+	if(wheelVal > 1.0f && wheelVal < 2.0f) {
+		color.r = 2.0f - wheelVal;
+		color.g = 1.0f;
+		color.b = 0.0f;
+	}
+	if(wheelVal > 2.0f && wheelVal < 3.0f) {
+		color.r = 0.0f;
+		color.g = 1.0f;
+		color.b = wheelVal - 2.0f;
+	}
+	if(wheelVal > 3.0f && wheelVal < 4.0f) {
+		color.r = 0.0f;
+		color.g = 4.0f - wheelVal;
+		color.b = 1.0f;
+	}
+	if(wheelVal > 4.0f && wheelVal < 5.0f) {
+		color.r = wheelVal - 4.0f;
+		color.g = 0.0f;
+		color.b = 1.0f;
+	}
+	if(wheelVal > 5.0f && wheelVal < 6.0f) {
+		color.r = 1.0f;
+		color.g = 0.0f;
+		color.b = 6.0f - wheelVal;
+	}
+}
+
+void Player::colorShiftDown(float x) {
+	wheelVal -= x;
+	if(wheelVal < 0.0f)
+		wheelVal += 6.0f;
+
+	if(wheelVal > 0.0f && wheelVal < 1.0f) {
+		color.r = 1.0f;
+		color.g = wheelVal;
+		color.b = 0.0f;
+	}
+	if(wheelVal > 1.0f && wheelVal < 2.0f) {
+		color.r = 2.0f - wheelVal;
+		color.g = 1.0f;
+		color.b = 0.0f;
+	}
+	if(wheelVal > 2.0f && wheelVal < 3.0f) {
+		color.r = 0.0f;
+		color.g = 1.0f;
+		color.b = wheelVal - 2.0f;
+	}
+	if(wheelVal > 3.0f && wheelVal < 4.0f) {
+		color.r = 0.0f;
+		color.g = 4.0f - wheelVal;
+		color.b = 1.0f;
+	}
+	if(wheelVal > 4.0f && wheelVal < 5.0f) {
+		color.r = wheelVal - 4.0f;
+		color.g = 0.0f;
+		color.b = 1.0f;
+	}
+	if(wheelVal > 5.0f && wheelVal < 6.0f) {
+		color.r = 1.0f;
+		color.g = 0.0f;
+		color.b = 6.0f - wheelVal;
+	}
 }
