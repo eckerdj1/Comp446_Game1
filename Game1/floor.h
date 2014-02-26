@@ -17,6 +17,9 @@ public:
 	void init(ID3D10Device* device);
 	void setSpeed(float s) {floorSpeed = s;}
 	float getSpeed() {return floorSpeed;}
+	int size() {return floor.size();}
+	GameObject section(int i) {return floor[i];}
+	DXColor getRandomColor();
 
 	void update(float dt);
 	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
@@ -39,6 +42,8 @@ private:
 	float getRandomRGB(float cSet = 2000.0f);
 
 	DXColor nextColor, currentColor, previousColor;
+	
+	bool channels[3];
 
 	vector<Box*> coloredBoxes;
 	vector<GameObject> floor;

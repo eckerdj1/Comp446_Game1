@@ -16,9 +16,13 @@ void Obstacle::update(float dt) {
 	GameObject::update(dt);
 
 	Vector3 pos = GameObject::getPosition();
-	if (pos.z < -200) {
-		pos.z = rand()%150;
-		pos.z += 200;
-		GameObject::setPosition(pos);
+	if (pos.z < -50)
+	{
+		setInActive();
 	}
+}
+
+void Obstacle::setColor(DXColor color)
+{
+	box->setVertexColor(color, color);
 }

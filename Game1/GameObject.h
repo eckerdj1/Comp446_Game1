@@ -15,7 +15,7 @@ public:
 	GameObject();
 	~GameObject();
 
-	void init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, float s);
+	void init(Box *b, float r, Vector3 pos, Vector3 vel, float spd, Vector3 scale);
 	void draw();
 	void update(float dt);
 
@@ -27,12 +27,12 @@ public:
 	Vector3 getVelocity() {return velocity;}
 	void setSpeed(float s) {speed = s;}
 	float getSpeed() {return speed;}
-	void setRadius(float r) {radius = r; radiusSquared = (scale*r)*(scale*r);}
+	void setRadius(float r) {radius = r; radiusSquared = (size.x)*(size.x*r);}
 	float getRadiusSquare() {return radiusSquared;}
 	float getRadius() {return radius;}
 	Matrix getWorldMatrix() {return world;}
-	void setScale(float s) {scale = s; radiusSquared = (s*radius)*(s*radius);}
-	float getScale() {return scale;}
+	void setSize(Vector3 s) {size = s; radiusSquared = (s.x*radius)*(s.x*radius);}
+	Vector3 getSize() {return size;}
 	void setActive() {active = true;}
 	void setInActive() {active = false;}
 	bool isActive() {return active;}
@@ -45,6 +45,11 @@ public:
 	void normlizeVelocity();
 	float getBoxBottom();
 	void deleteBox();
+	bool contains(Vector3);
+	DXColor colorAtPoint(float zPos);
+	float xRadius();
+	float yRadius();
+	float zRadius();
 
 protected:
 		Box *box;
@@ -52,12 +57,12 @@ protected:
 private:
 	Vector3 position;
 	Vector3 velocity;
+	Vector3 size;
 	float speed;
 	float radius;
 	float radiusSquared;
 	bool active;
 	Matrix world;
-	float scale;
 	ID3D10EffectTechnique* mTech;
 };
 

@@ -28,15 +28,15 @@ void GameObject::draw()
 		/*box->draw();*/
 }
 
-void GameObject::init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, float s)
+void GameObject::init(Box *b, float r, Vector3 pos, Vector3 vel, float spd, Vector3 v3size)
 {
 	box = b;
 	radius = r;
 	radius *= 1.01; //fudge factor
 	position = pos;
 	velocity = vel;
-	speed = sp;
-	scale = s;
+	speed = spd;
+	size = v3size;
 	radiusSquared = radius * radius;
 }
 
@@ -121,4 +121,51 @@ void GameObject::normlizeVelocity()
 void GameObject::deleteBox()
 {
 	box = 0;
+}
+
+bool GameObject::contains(Vector3 point)
+{
+	if (point.z > position.z - xRadius() && point.z < position.z + xRadius())
+	{
+		if (point.y > position.y - xRadius() && point.y < position.y + xRadius())
+		{
+			if (point.x > position.x - xRadius() && point.x < position.x + xRadius())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+DXColor GameObject::colorAtPoint(float zPos)
+{
+	DXColor c1, c2, c3;
+	c1 = box->getColor1();
+	c2 = box->getColor2();
+	if (c1 == c2)
+		return c1;
+	c3 = c1;
+	float colorPos = (zPos - position.z - zRadius()) / size.z;
+	if (c1.r != c2.r)
+		c3.r += ((c1.r - c2.r) * colorPos);
+	if (c1.g != c2.g)
+		c3.g += ((c1.g - c2.g) * colorPos);
+	if (c1.b != c2.b)
+		c3.b += ((c1.b - c2.b) * colorPos);
+
+	return c3;		
+}
+
+float GameObject::xRadius()
+{
+	return size.x / 2.0f;
+}
+float GameObject::yRadius()
+{
+	return size.y / 2.0f;
+}
+float GameObject::zRadius()
+{
+	return size.z / 2.0f;
 }

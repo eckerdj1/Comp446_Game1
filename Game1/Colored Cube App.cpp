@@ -47,6 +47,7 @@ public:
 private:
 	void buildFX();
 	void buildVertexLayouts();
+	void setNewObstacleCluster();
  
 private:
 
@@ -64,9 +65,13 @@ private:
 	Box playerBox;
 	Player player;
 	int numberOfObstacles;
-	Box obstacleBox;
+	vector<Box*> obstacleBoxes;
 	vector<Obstacle> obstacles;
 	Line rLine, gLine, bLine;
+	/////New obstacle code: Daniel J. Ecker////
+	float floorMovement;
+	int clusterSize, clusterSizeVariation, clusterSeparation;
+	int cubeSeparation, lineJiggle, cubeJiggle, clusterJiggle;
 	//////////////////////////////////////
 	///Floor
 	Floor floor;
@@ -183,7 +188,7 @@ void ColoredCubeApp::initApp()
 	zLine.init(&bLine, Vector3(0,0,0), 10);
 	zLine.setPosition(Vector3(0,0,0));
 	zLine.setRotationY(ToRadian(90));
-	numberOfObstacles = 40;
+	numberOfObstacles = 50;
 	float obstacleScale = 2.5f;
 	playerBox.init(md3dDevice, obstacleScale, WHITE);
 	player.init(&playerBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, 0), Vector3(0, 0, 0), 10, 0);
@@ -194,128 +199,153 @@ void ColoredCubeApp::initApp()
 	int chance = 0;
 	int r = 0;
 	float floorSpeed = floor.getSpeed();
-	obstacleBox.init(md3dDevice, obstacleScale, GREEN);
-	for (int i = 0; i < numberOfObstacles; i++) {
+	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
+	for (int i=0; i<numberOfObstacles; ++i)
+	{	
+		Box* box = new Box();
+		box->init(md3dDevice, obstacleScale, GREEN);
+		obstacleBoxes.push_back(box);
+		Obstacle o;
+		o.init(box, sqrt(5.0f), Vector3(0,0,200), Vector3(0,0,-1), 0, Vector3(oScale));
+		o.setInActive();
+		obstacles.push_back(o);
+	}
+	///Set obstacle cluster variables
+	clusterSize = 1;
+	clusterSizeVariation = 3;
+	clusterSeparation = 50;
+	cubeSeparation = 18;
+	lineJiggle = 3;
+	cubeJiggle = 3;
+	clusterJiggle = 10;
+	floorMovement = 0.0f;
+
+
+
+
+
+	/*for (int i = 0; i < numberOfObstacles; i++) {
+		
 		Obstacle newObstacle;
 		if ((i%5) == 0) {
-			posZ = rand()%150;
-			posZ += 200;
+			posZ = rand() % 200;
+			posZ +=  200 + i * 24;
 			r = rand()%5;
 			switch(r) {
 				case 0:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 1:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 2:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 3:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 4:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 			}
 		}
 		if ((i%5) == 1) {
-			int posZ = rand()%150;
-			posZ += 400;
+			int posZ = rand()%200;
+			posZ += 400 + i * 24;
 			r = rand()%5;
 			switch(r) {
 				case 0:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 1:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 2:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 3:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 4:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 			}
 		}
 		if ((i%5) == 2) {
-			int posZ = rand()%150;
-			posZ += 600;
+			int posZ = rand()%200;
+			posZ += 600 + i * 24;
 			r = rand()%5;
 			switch(r) {
 					case 0:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 1:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 2:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 3:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 4:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 			}
 		}
 		if ((i%5) == 3) {
-			int posZ = rand()%150;
-			posZ += 700;
+			int posZ = rand()%200;
+			posZ += 800 + i * 24;
 			r = rand()%5;
 			switch(r) {
 					case 0:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 1:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 2:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 3:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 4:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 			}
 		}
 		if ((i%5) == 4) {
-			int posZ = rand()%150;
-			posZ += 800;
+			int posZ = rand()%200;
+			posZ += 1000 + i * 24;
 			r = rand()%5;
 			switch(r) {
 					case 0:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 1:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 2:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 3:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 				case 4:
-					newObstacle.init(&obstacleBox, sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, obstacleScale);
+					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
 					break;
 			}
 		}
 
 		obstacles.push_back(newObstacle);
-	}
+	}*/
 	//////////////////////////////////////
 
 
-	gameObject1.init(&whiteBox, sqrt(2.0f), Vector3(-10,0,0), Vector3(0,0,0), 0,1);
-	gameObject2.init(&redBox, sqrt(2.0f), Vector3(4,0,0), Vector3(0,0,0), 0,1);
-	gameObject3.init(&redBox, sqrt(2.0f), Vector3(-4,0,0), Vector3(0,0,0), 0,1);
+	gameObject1.init(&whiteBox, sqrt(2.0f), Vector3(-10,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
+	gameObject2.init(&redBox, sqrt(2.0f), Vector3(4,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
+	gameObject3.init(&redBox, sqrt(2.0f), Vector3(-4,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
 
 	floor.init(md3dDevice);
 
@@ -477,8 +507,30 @@ void ColoredCubeApp::updateScene(float dt)
 	player.move();
 	player.update(dt);
 
-	for (int i = 0; i < 40; i++) {
+	//new clustered cube code
+	floorMovement += floor.getSpeed() * dt;
+	if (floorMovement > clusterSeparation)
+	{
+		floorMovement = 0.0f;
+		setNewObstacleCluster();
+	}
+
+	for (int i = 0; i < numberOfObstacles; i++) {
 		obstacles[i].setSpeed(floor.getSpeed());
+		float zPos = obstacles[i].getPosition().z;
+		if (zPos > 100 && zPos < 130)
+			for (int f=0; f<floor.size(); ++f)
+			{
+				if (floor.section(f).contains(Vector3(0, -2, zPos)))
+				{
+					DXColor compliment = floor.section(f).colorAtPoint(zPos);
+					compliment.r = 1.0f - compliment.r;
+					compliment.g = 1.0f - compliment.g;
+					compliment.b = 1.0f - compliment.b;
+					obstacles[i].setColor(compliment);
+					break;
+				}
+			}
 		obstacles[i].update(dt);
 	}
 
@@ -615,7 +667,7 @@ void ColoredCubeApp::drawScene()
 	player.setMTech(mTech);
 	player.draw();
 
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < numberOfObstacles; i++) {
 		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 		mWVP = obstacles[i].getWorldMatrix() * mView * mProj;
 		mfxWVPVar->SetMatrix((float*)&mWVP);
@@ -730,3 +782,52 @@ void ColoredCubeApp::buildVertexLayouts()
 		PassDesc.IAInputSignatureSize, &mVertexLayout));
 }
  
+void ColoredCubeApp::setNewObstacleCluster()
+{
+	float obstacleScale = 2.5f;
+	float startZ = 125.0f;
+	float currentZ = startZ;
+	float laneSize = 6.0f;
+	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
+	bool lane[5];
+	for (int i=0; i<5; ++i)
+	{
+		lane[i] = false;
+	}
+
+	
+	int cs = clusterSize + rand() % clusterSizeVariation;
+	while(cs)	//put lines of cubes in the same cluster
+	{	
+		int cubesOnLine = rand() % 4 + 1;
+		while (cubesOnLine) //puts cubes on the same line
+		{
+			float thisZ = currentZ + (rand() % lineJiggle);
+			int pickLane = rand() % 5;
+			while (lane[pickLane])
+			{
+				pickLane = rand() % 5;
+			}
+			float thisX = -12.0f + pickLane * laneSize;
+			lane[pickLane] = true;
+			cubesOnLine--;
+			for (int i=0; i<obstacles.size(); ++i)
+			{
+				if (obstacles[i].isNotActive())
+				{
+					obstacles[i].setActive();
+					obstacles[i].setPosition(Vector3(thisX, 1, thisZ));
+					obstacles[i].setSpeed(floor.getSpeed());
+					break;
+				}
+			}
+			
+		}
+		for (int i=0; i<5; ++i)
+		{
+			lane[i] = false;
+		}
+		currentZ += (int)(cubeSeparation + rand() % cubeJiggle);
+		cs--;
+	}
+}
