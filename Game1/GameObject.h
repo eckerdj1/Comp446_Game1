@@ -7,6 +7,8 @@
 #include "Box.h"
 #include "constants.h"
 #include <math.h>
+#include <vector>
+using std::vector;
 
 class GameObject
 {
@@ -50,6 +52,7 @@ public:
 	float xRadius();
 	float yRadius();
 	float zRadius();
+	Vector3 cornerAt(int i);
 
 protected:
 		Box *box;
@@ -58,6 +61,7 @@ private:
 	Vector3 position;
 	Vector3 velocity;
 	Vector3 size;
+	vector<Vector3> corners;
 	float speed;
 	float radius;
 	float radiusSquared;

@@ -38,6 +38,14 @@ void GameObject::init(Box *b, float r, Vector3 pos, Vector3 vel, float spd, Vect
 	speed = spd;
 	size = v3size;
 	radiusSquared = radius * radius;
+	corners.push_back(Vector3(size.x, size.y, size.z));
+	corners.push_back(Vector3(-size.x, size.y, size.z));
+	corners.push_back(Vector3(size.x, -size.y, size.z));
+	corners.push_back(Vector3(-size.x, -size.y, size.z));
+	corners.push_back(Vector3(size.x, size.y, -size.z));
+	corners.push_back(Vector3(-size.x, size.y, -size.z));
+	corners.push_back(Vector3(size.x, -size.y, -size.z));
+	corners.push_back(Vector3(-size.x, -size.y, -size.z));
 }
 
 void GameObject::update(float dt)
@@ -168,4 +176,9 @@ float GameObject::yRadius()
 float GameObject::zRadius()
 {
 	return size.z / 2.0f;
+}
+
+Vector3 GameObject::cornerAt(int i)
+{
+	return corners[i];
 }

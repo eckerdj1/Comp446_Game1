@@ -175,13 +175,22 @@ void Player::move(float dt) {
 
 }
 
+bool Player::isWithin(float range, GameObject* g)
+{
+	float distSquared = D3DXVec3LengthSq(&(position - g->getPosition()));
+	float rSquared = (float)pow((double)range, 2.0);
+	if (distSquared < rSquared)
+		return true;
+	return false;
+}
+
 bool Player::contains(Vector3 point)
 {
-	if (point.z > position.z - xRadius() && point.z < position.z + xRadius())
+	if (point.z >= position.z - size.z && point.z <= position.z + size.z)
 	{
-		if (point.y > position.y - xRadius() && point.y < position.y + xRadius())
+		if (point.y >= position.y - size.y && point.y <= position.y + size.y)
 		{
-			if (point.x > position.x - xRadius() && point.x < position.x + xRadius())
+			if (point.x >= position.x - size.x && point.x <= position.x + size.x)
 			{
 				return true;
 			}
@@ -192,7 +201,14 @@ bool Player::contains(Vector3 point)
 
 bool Player::collided(GameObject *gameObject)
 {
-	
+	GameObject* g = gameObject;
+	for (int i=0; i<8; ++i)
+	{
+		if (contains(g->getPosition() + g->cornerAt(i)))
+		{
+			return true;
+		}
+	}
 
 	return false;
 }

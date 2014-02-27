@@ -18,6 +18,7 @@ public:
 	void update(float dt);
 	void draw();
 	void move(float dt);
+	bool isWithin(float range, GameObject* g);
 	bool collided(GameObject *gameObject);
 	Matrix getWorldMatrix() {return world;}
 	void setMTech(ID3D10EffectTechnique* m){ mTech = m;}

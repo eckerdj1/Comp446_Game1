@@ -192,9 +192,11 @@ void ColoredCubeApp::initApp()
 	zLine.setRotationY(ToRadian(90));
 	numberOfObstacles = 50;
 	float obstacleScale = 2.5f;
+	float playerScale = 2.67f;
 	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
-	playerBox.init(md3dDevice, obstacleScale, WHITE);
-	player.init(&playerBox, sqrt(obstacleScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, oScale);
+	Vector3 pScale(playerScale, playerScale, playerScale);
+	playerBox.init(md3dDevice, playerScale, WHITE);
+	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, pScale);
 	player.linkInput(input);
 
 	int posZ = 0;
@@ -371,6 +373,9 @@ void ColoredCubeApp::onResize()
 void ColoredCubeApp::updateScene(float dt)
 {
 	D3DApp::updateScene(dt);
+
+	float gameTime = mTimer.getGameTime();
+
 	/*Old Code that may still be useful//
 	//float gameTime = mTimer.getGameTime();
 	//if (input->wasKeyPressed(PlayerRightKey) || input->wasKeyPressed(VK_RIGHT))
@@ -502,56 +507,64 @@ void ColoredCubeApp::updateScene(float dt)
 	//	}
 	//}*/
 
-	
-	
-	////// New Stuff added by Steve //////
-	player.move(dt);
-	player.update(dt);
-
-	//new clustered cube code
-	floorMovement += floor.getSpeed() * dt;
-	if (floorMovement > clusterSeparation)
+	if (gameTime > 1.0f && !gameOver)
 	{
-		floorMovement = 0.0f;
-		setNewObstacleCluster();
-	}
+		////// New Stuff added by Steve //////
+		player.move(dt);
+		player.update(dt);
 
-	for (int i = 0; i < numberOfObstacles; i++) {
-		obstacles[i].setSpeed(floor.getSpeed());
-		float zPos = obstacles[i].getPosition().z;
-		if (zPos > 100 && zPos < 130)
-			for (int f=0; f<floor.size(); ++f)
-			{
-				if (floor.section(f).contains(Vector3(0, -2, zPos)))
+		//new clustered cube code
+		floorMovement += floor.getSpeed() * dt;
+		if (floorMovement > clusterSeparation)
+		{
+			floorMovement = 0.0f;
+			setNewObstacleCluster();
+		}
+
+		for (int i = 0; i < numberOfObstacles; i++) {
+			obstacles[i].setSpeed(floor.getSpeed());
+			float zPos = obstacles[i].getPosition().z;
+			if (zPos > 100 && zPos < 130)
+				for (int f=0; f<floor.size(); ++f)
 				{
-					DXColor compliment = floor.section(f).colorAtPoint(zPos);
-					compliment.r = 1.0f - compliment.r;
-					compliment.g = 1.0f - compliment.g;
-					compliment.b = 1.0f - compliment.b;
-					obstacles[i].setColor(compliment);
-					break;
+					if (floor.section(f).contains(Vector3(0, -2, zPos)))
+					{
+						DXColor compliment = floor.section(f).colorAtPoint(zPos);
+						compliment.r = 1.0f - compliment.r;
+						compliment.g = 1.0f - compliment.g;
+						compliment.b = 1.0f - compliment.b;
+						obstacles[i].setColor(compliment);
+						break;
+					}
+				}
+			obstacles[i].update(dt);
+			if (player.isWithin(12.0f, &obstacles[i]))
+			{
+				if (player.collided(&obstacles[i]))
+				{
+					gameOver = true;
 				}
 			}
-		obstacles[i].update(dt);
+		}
+
+		xLine.update(dt);
+		yLine.update(dt);
+		zLine.update(dt);
+		//////////////////////////////////////
+		// Floor test code //
+
+
+
+		/*for (int i=0; i<floor.size(); ++i)
+		{
+			floor[i].update(dt);
+			float zPos = floor[i].getPosition().z;
+			if (zPos < -50)
+				floor[i].setPosition(Vector3(0, -2, zPos + floor.size() * floorSectionLength));
+		}*/
+		//Changes By: Daniel J. Ecker
+		floor.update(dt);
 	}
-
-	xLine.update(dt);
-	yLine.update(dt);
-	zLine.update(dt);
-	//////////////////////////////////////
-	// Floor test code //
-
-
-
-	/*for (int i=0; i<floor.size(); ++i)
-	{
-		floor[i].update(dt);
-		float zPos = floor[i].getPosition().z;
-		if (zPos < -50)
-			floor[i].setPosition(Vector3(0, -2, zPos + floor.size() * floorSectionLength));
-	}*/
-	//Changes By: Daniel J. Ecker
-	floor.update(dt);
 
 	
 
