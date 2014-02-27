@@ -97,6 +97,12 @@ private:
 
 	bool gameOver;
 
+	//New Spectrum HUD stuff by Andy
+	Box specHudBox[6];
+	Box cursorBox;
+	GameObject spectrum[6];
+	GameObject cursor;
+
 
 	ID3D10Effect* mFX;
 	ID3D10EffectTechnique* mTech;
@@ -224,127 +230,23 @@ void ColoredCubeApp::initApp()
 	clusterJiggle = 10;
 	floorMovement = 0.0f;
 
+	//New spectrum HUD by Andy
+	specHudBox[0].init(md3dDevice, .5f, 1.0f, 1.0f, RED, YELLOW);
+	specHudBox[1].init(md3dDevice, .5f, 1.0f, 1.0f, YELLOW, GREEN);
+	specHudBox[2].init(md3dDevice, .5f, 1.0f, 1.0f, GREEN, CYAN);
+	specHudBox[3].init(md3dDevice, .5f, 1.0f, 1.0f, CYAN, BLUE);
+	specHudBox[4].init(md3dDevice, .5f, 1.0f, 1.0f, BLUE, MAGENTA);
+	specHudBox[5].init(md3dDevice, .5f, 1.0f, 1.0f, MAGENTA, RED);
+	cursorBox.init(md3dDevice, .15f, 1.0f, .75f, BLACK, BLACK);
 
-
-
-
-	/*for (int i = 0; i < numberOfObstacles; i++) {
-		
-		Obstacle newObstacle;
-		if ((i%5) == 0) {
-			posZ = rand() % 200;
-			posZ +=  200 + i * 24;
-			r = rand()%5;
-			switch(r) {
-				case 0:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 1:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 2:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 3:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 4:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-			}
-		}
-		if ((i%5) == 1) {
-			int posZ = rand()%200;
-			posZ += 400 + i * 24;
-			r = rand()%5;
-			switch(r) {
-				case 0:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 1:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 2:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 3:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 4:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-			}
-		}
-		if ((i%5) == 2) {
-			int posZ = rand()%200;
-			posZ += 600 + i * 24;
-			r = rand()%5;
-			switch(r) {
-					case 0:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 1:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 2:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 3:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 4:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-			}
-		}
-		if ((i%5) == 3) {
-			int posZ = rand()%200;
-			posZ += 800 + i * 24;
-			r = rand()%5;
-			switch(r) {
-					case 0:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 1:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 2:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 3:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 4:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-			}
-		}
-		if ((i%5) == 4) {
-			int posZ = rand()%200;
-			posZ += 1000 + i * 24;
-			r = rand()%5;
-			switch(r) {
-					case 0:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 1:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(-6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 2:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(0, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 3:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(6, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-				case 4:
-					newObstacle.init(obstacleBoxes[i], sqrt(obstacleScale * 2.0f), Vector3(12, 0, posZ), Vector3(0, 0, -1), floorSpeed, oScale);
-					break;
-			}
-		}
-
-		obstacles.push_back(newObstacle);
-	}*/
-	//////////////////////////////////////
+	Vector3 specPos = Vector3(11.0f, 25.0f, -5.0f);
+	spectrum[0].init(&specHudBox[0], 1.0f,specPos + Vector3(0.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	spectrum[1].init(&specHudBox[1], 1.0f,specPos + Vector3(2.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	spectrum[2].init(&specHudBox[2], 1.0f,specPos + Vector3(4.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	spectrum[3].init(&specHudBox[3], 1.0f,specPos + Vector3(6.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	spectrum[4].init(&specHudBox[4], 1.0f,specPos + Vector3(8.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	spectrum[5].init(&specHudBox[5], 1.0f,specPos + Vector3(10.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
+	cursor.init(&cursorBox,1.0f,specPos + Vector3(-.80f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 
 
 	gameObject1.init(&whiteBox, sqrt(2.0f), Vector3(-10,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
@@ -376,136 +278,6 @@ void ColoredCubeApp::updateScene(float dt)
 
 	float gameTime = mTimer.getGameTime();
 
-	/*Old Code that may still be useful//
-	//float gameTime = mTimer.getGameTime();
-	//if (input->wasKeyPressed(PlayerRightKey) || input->wasKeyPressed(VK_RIGHT))
-	//{
-	//	playerBlock++;
-	//}
-	//if (input->wasKeyPressed(PlayerLeftKey) || input->wasKeyPressed(VK_LEFT))
-	//{
-	//	playerBlock--;
-	//}
-	//if (playerBlock < 10)
-	//	playerBlock = 10;
-	//if (playerBlock > 30)
-	//	playerBlock = 30;
-
-	//if (gameTime > 7.7f && !gameOver) //five seconds?
-	//{
-	//	bulletElapsed += dt;
-	//	if (input->getMouseLButton() && bulletElapsed > (1.0f / bulletsPerSecond))
-	//	{
-	//		for (int i=0; i<bullets.size(); ++i)
-	//		{
-	//			if (bullets[i].isNotActive())
-	//			{
-	//				bullets[i].setActive();
-	//				ammo--;
-	//				bullets[i].setPosition(Vector3(-40 + 2 * playerBlock, -14, 0));
-	//				bulletElapsed = 0.0f;
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	for (int i=0; i<bullets.size(); ++i)
-	//	{
-	//		bullets[i].update(dt);
-	//		if (bullets[i].isActive())
-	//		{	
-	//			if (bullets[i].getPosition().y > 20)
-	//			{
-	//				bullets[i].setInActive();
-	//				ammo++;
-	//			}
-	//		}
-	//	}
-
-
-	//	//falling blocks
-	//	if (gameTime > 6 && (int)gameTime % 5 == 0)
-	//		fallRatePerSecond += 0.0000777;
-	//	elapsed += dt; //start counting elapsed time
-
-	//	if (elapsed > (1.0f / fallRatePerSecond))
-	//	{
-	//		elapsed = 0.0f;
-	//		for (int i=0; i<fallingBlocks.size(); ++i)
-	//		{
-	//			if (fallingBlocks[i].isNotActive())
-	//			{
-	//				fallingBlocks[i].setActive();
-	//				float s = avgFallSpeed + (rand() % 4 - 1);
-	//				fallingBlocks[i].setSpeed(s);
-	//				int xPos = rand() % 11 - 5;
-	//				fallingBlocks[i].setPosition(Vector3(xPos * 2,20,0));
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	for (int i=0; i<fallingBlocks.size(); ++i)
-	//	{
-	//		fallingBlocks[i].update(dt);
-	//		if (fallingBlocks[i].isActive())
-	//		{
-	//			if (fallingBlocks[i].getBoxBottom() < -14.0f) // block hit the floor
-	//			{
-	//				fallingBlocks[i].setInActive();
-	//				lives--;
-	//				activeMessage = true;
-	//				message = L"STEAMED! Gallon lost.";
-	//			}
-	//		}
-	//	}
-	//	//end of falling blocks
-
-	//	//bullet/block collision
-	//	for (int i=0; i<fallingBlocks.size(); ++i)
-	//	{
-	//		if (fallingBlocks[i].isActive())
-	//		{
-	//			for (int j=0; j<bullets.size(); ++j)
-	//			{
-	//				if (bullets[j].isActive())
-	//				{
-	//					if (bullets[j].collided(&fallingBlocks[i]))
-	//					{
-	//						bullets[j].setInActive();
-	//						ammo++;
-	//						fallingBlocks[i].setInActive();
-	//						score.addPoints(1);
-	//						lifeGained = false;
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//	if (!lifeGained && score.getInt() % 100 == 0)
-	//	{
-	//		lives++;
-	//		lifeGained = true;
-	//		activeMessage = true;
-	//		message = L"Milestone! Extra gallon generated!";
-	//	}
-	//	if (activeMessage)
-	//	{
-	//		messageTimer += dt;
-	//		if (messageTimer > 4.0f)
-	//		{
-	//			messageTimer = 0.0f;
-	//			activeMessage = false;
-	//		}
-	//	}
-	//	if (lives == 0)
-	//	{
-	//		gameOver = true;
-	//	}
-	//	if (lives == 1)
-	//	{
-	//		activeMessage = true;
-	//		message = L"DANGER!\nOne gallon left!";
-	//	}
-	//}*/
 
 	if (gameTime > 1.0f && !gameOver)
 	{
@@ -547,6 +319,15 @@ void ColoredCubeApp::updateScene(float dt)
 				}
 			}
 		}
+
+		for(int i = 0; i < 6; i++) {
+			spectrum[i].update(dt);
+		}
+
+		float cursorPos = player.getWheelVal();
+		cursor.setPosition(Vector3(10.2f,24.0f,-5.0f) + 2*Vector3(cursorPos, 0.0f, 0.0f));
+		cursor.update(dt);
+
 
 		xLine.update(dt);
 		yLine.update(dt);
@@ -599,78 +380,6 @@ void ColoredCubeApp::drawScene()
 	//setting the color flip variable in the shader
 	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 
-	//draw the lines
-	
-
-	//draw the quad using the "old" method
-	
-
-	////draw the boxes
-	//mWVP = gameObject1.getWorldMatrix()  *mView*mProj;
-	//mfxWVPVar->SetMatrix((float*)&mWVP);
-	//gameObject1.setMTech(mTech);
-	//gameObject1.draw();
-
-	//mWVP = gameObject2.getWorldMatrix()*mView*mProj;
-	//mfxWVPVar->SetMatrix((float*)&mWVP);
-	//foo[0] = 0;
-	//mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//gameObject2.setMTech(mTech);
-	//gameObject2.draw();
-	//mWVP = gameObject3.getWorldMatrix()*mView*mProj;
-	//foo[0] = 0;
-	//mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//mfxWVPVar->SetMatrix((float*)&mWVP);
-	//gameObject3.setMTech(mTech);
-	//gameObject3.draw();
-     
-	////draw the spinning box
-	//if (ToRadian(spinAmount*40) > PI)
-	//	foo[0] = 1;
-	//else
-	//	foo[0] = 0;
-	//mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//Matrix spin;
-	//RotateY(&spin, ToRadian(spinAmount*40));
-	//Matrix translate;
-	//Translate(&translate, 5, 0, 0);
-	//mWVP = spinner.getWorldMatrix() *translate * spin  *mView*mProj;
-	//mfxWVPVar->SetMatrix((float*)&mWVP);
-	//spinner.setMTech(mTech);
-	//spinner.draw();
-
-	////draw the wall of boxes
-	//foo[0] = 0;
-	//mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//for (int i=0; i<fallingBlocks.size(); ++i)
-	//{
-	//	mWVP = fallingBlocks[i].getWorldMatrix()*mView*mProj;
-	//	mfxWVPVar->SetMatrix((float*)&mWVP);
-	//	fallingBlocks[i].setMTech(mTech);
-	//	fallingBlocks[i].draw();
-	//}
-	////draw the bullets
-	//foo[0] = 0;
-	//for (int i=0; i<bullets.size(); ++i)
-	//{
-	//	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//	mWVP = bullets[i].getWorldMatrix() * mView * mProj;
-	//	mfxWVPVar->SetMatrix((float*)&mWVP);
-	//	bullets[i].setMTech(mTech);
-	//	bullets[i].draw();
-	//}
-
-	////draw the falling blocks
-	//foo[0] = 0;
-	//for (int i=0; i<fallingBlocks.size(); ++i)
-	//{
-	//	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
-	//	mWVP = fallingBlocks[i].getWorldMatrix() * mView * mProj;
-	//	mfxWVPVar->SetMatrix((float*)&mWVP);
-	//	fallingBlocks[i].setMTech(mTech);
-	//	fallingBlocks[i].draw();
-	//}
-
 	//draw the floor
 	foo[0] = 0;
 	mfxFLIPVar->SetRawValue(&foo[0], 0 , sizeof(int));
@@ -689,6 +398,22 @@ void ColoredCubeApp::drawScene()
 		obstacles[i].setMTech(mTech);
 		obstacles[i].draw();
 	}
+
+	//Spectrum HUD
+	for(int i = 0; i < 6; i++) {
+		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
+		D3DXMATRIX a;
+		D3DXMatrixRotationY(&a, 1.573f);
+		mWVP = a * spectrum[i].getWorldMatrix() * mView * mProj;
+		mfxWVPVar->SetMatrix((float*)&mWVP);
+		spectrum[i].setMTech(mTech);
+		spectrum[i].draw();
+	}
+	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
+	mWVP = cursor.getWorldMatrix() * mView * mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	cursor.setMTech(mTech);
+	cursor.draw();
 
 
 	mWVP = zLine.getWorldMatrix() *mView*mProj;

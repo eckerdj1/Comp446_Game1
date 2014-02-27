@@ -31,6 +31,7 @@ public:
 	float xRadius();
 	float yRadius();
 	float zRadius();
+	float getWheelVal() {return wheelVal;}
 
 private:
 	Box* box;

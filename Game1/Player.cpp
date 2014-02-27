@@ -65,58 +65,12 @@ void Player::update(float dt)
 {
 	float changeBy = 0.003f;
 	if(input->isKeyDown(0x4A) || keyPressed(PlayerColorUpKey)) {
-		colorShiftUp(changeBy);
-	}
-	if(input->isKeyDown(0x4C) || keyPressed(PlayerColorDownKey)) {
 		colorShiftDown(changeBy);
 	}
+	if(input->isKeyDown(0x4C) || keyPressed(PlayerColorDownKey)) {
+		colorShiftUp(changeBy);
+	}
 
-	/*
-	///Red value up/down
-	if(input->isKeyDown(PlayerRUpKey)) {
-		color.r  += changeBy;
-		if (color.r > 1)
-			color.r = 1.0f;
-		if (color.r < 0)
-			color.r = 0.0f;
-	}
-	if(input->isKeyDown(PlayerRDownKey)) {
-		color.r  -= changeBy;
-		if (color.r > 1)
-			color.r = 1.0f;
-		if (color.r < 0)
-			color.r = 0.0f;
-	}
-	///Green value up/down
-	if(input->isKeyDown(PlayerGUpKey)) {
-		color.g  += changeBy;
-		if (color.g > 1)
-			color.g = 1.0f;
-		if (color.g < 0)
-			color.g = 0.0f;
-	}
-	if(input->isKeyDown(PlayerGDownKey)) {
-		color.g  -= changeBy;
-		if (color.g > 1)
-			color.g = 1.0f;
-		if (color.g < 0)
-			color.g = 0.0f;
-	}
-	///Blue value up/down
-	if(input->isKeyDown(PlayerBUpKey)) {
-		color.b  += changeBy;
-		if (color.b > 1)
-			color.b = 1.0f;
-		if (color.b < 0)
-			color.b = 0.0f;
-	}
-	if(input->isKeyDown(PlayerBDownKey)) {
-		color.b  -= changeBy;
-		if (color.b > 1)
-			color.b = 1.0f;
-		if (color.b < 0)
-			color.b = 0.0f;
-	}*/	
 	box->releaseVBuffer();
 	box->setVertexColor(color, color);
 	
