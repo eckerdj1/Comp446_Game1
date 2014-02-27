@@ -58,6 +58,8 @@ private:
 
 	////// New Stuff added by Steve //////
 	Box playerBox;
+	Box lineBox;
+	GameObject outline[11];
 	Player player;
 	int numberOfObstacles;
 	vector<Box*> obstacleBoxes;
@@ -177,7 +179,7 @@ void ColoredCubeApp::initApp()
 	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	Vector3 pScale(playerScale, playerScale, playerScale);
 	playerBox.init(md3dDevice, playerScale, WHITE);
-	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, pScale, audio);
+	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 3, 0), Vector3(0, 0, 0), 10, pScale, audio);
 	player.linkInput(input);
 
 	int posZ = 0;
@@ -223,6 +225,19 @@ void ColoredCubeApp::initApp()
 	spectrum[5].init(&specHudBox[5], 1.0f,specPos + Vector3(10.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 	cursor.init(&cursorBox,1.0f,specPos + Vector3(-.80f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 
+	lineBox.init(md3dDevice, 2.67f, .15f, .15f, BLACK, BLACK);
+	outline[0].init(&lineBox, 2.67f, Vector3(0, 5.68, -2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[1].init(&lineBox, 2.67f, Vector3(-2.67, 5.68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[2].init(&lineBox, 2.67f, Vector3(2.67, 5.68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[3].init(&lineBox, 2.67f, Vector3(0, 5.68, 2.37), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[4].init(&lineBox, 2.67f, Vector3(2.67, 3.2, -2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[5].init(&lineBox, 2.67f, Vector3(-2.67, 3.2, -2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[6].init(&lineBox, 2.67f, Vector3(0, 0.68, -2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[7].init(&lineBox, 2.67f, Vector3(2.67, 3, 2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[8].init(&lineBox, 2.67f, Vector3(-2.67, 3, 2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[9].init(&lineBox, 2.67f, Vector3(-2.67, .68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+	outline[10].init(&lineBox, 2.67f, Vector3(2.67, .68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
+
 	floor.init(md3dDevice);
 
 	gameOver = false;
@@ -253,7 +268,14 @@ void ColoredCubeApp::updateScene(float dt)
 	{
 		////// New Stuff added by Steve //////
 		player.move(dt);
+		Vector3 pOldPos = player.getPosition();
 		player.update(dt);
+
+		for (int i = 0; i < 11; i++) {
+			Vector3 oldPos = outline[i].getPosition();
+			Vector3 pPos = player.getPosition();
+			outline[i].setPosition(Vector3((pOldPos.x-oldPos.x)+pPos.x, oldPos.y, oldPos.z));
+		}
 
 		//new clustered cube code
 		floorMovement += floor.getSpeed() * dt;
@@ -299,6 +321,21 @@ void ColoredCubeApp::updateScene(float dt)
 		cursor.update(dt);
 
 		score.setMultiplier(getMultiplier());
+		if (getMultiplier() > 3.98) {
+			//audio->playCue(MATCH);
+		}
+
+		outline[0].update(dt);
+		outline[1].update(dt);
+		outline[2].update(dt);
+		outline[3].update(dt);
+		outline[4].update(dt);
+		outline[5].update(dt);
+		outline[6].update(dt);
+		outline[7].update(dt);
+		outline[8].update(dt);
+		outline[9].update(dt);
+		outline[10].update(dt);
 
 		//////////////////////////////////////
 		// Floor test code //
@@ -380,6 +417,70 @@ void ColoredCubeApp::drawScene()
 	cursor.draw();
 	
 	//////////////////////////////////////
+
+	mWVP = outline[0].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[0].setMTech(mTech);
+	outline[0].draw();
+
+	mWVP = outline[3].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[3].setMTech(mTech);
+	outline[3].draw();
+
+	mWVP = outline[6].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[6].setMTech(mTech);
+	outline[6].draw();
+
+	D3DXMATRIX a;
+	RotateY(&a, ToRadian(90));
+	mWVP = a * outline[1].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[1].setMTech(mTech);
+	outline[1].draw();
+
+	RotateY(&a, ToRadian(90));
+	mWVP = a * outline[2].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[2].setMTech(mTech);
+	outline[2].draw();
+
+	D3DXMATRIX c;
+	RotateY(&c, ToRadian(90));
+	mWVP = c * outline[9].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[9].setMTech(mTech);
+	outline[9].draw();
+
+	//RotateY(&c, ToRadian(90));
+	mWVP = c * outline[10].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[10].setMTech(mTech);
+	outline[10].draw();
+
+	D3DXMATRIX b;
+	RotateZ(&b, ToRadian(90));
+	mWVP = b * outline[4].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[4].setMTech(mTech);
+	outline[4].draw();
+
+	mWVP = b * outline[5].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[5].setMTech(mTech);
+	outline[5].draw();
+
+	//RotateZ(&b, ToRadian(90));
+	mWVP = b * outline[7].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[7].setMTech(mTech);
+	outline[7].draw();
+
+	mWVP = b * outline[8].getWorldMatrix()*mView*mProj;
+	mfxWVPVar->SetMatrix((float*)&mWVP);
+	outline[8].setMTech(mTech);
+	outline[8].draw();
 
 	/////Text Drawing Section
 	// We specify DT_NOCLIP, so we do not care about width/height of the rect.
@@ -528,7 +629,6 @@ float ColoredCubeApp::getMultiplier() {
 			floorC = floor.getTile(i)->colorAtPoint(0.0f);
 		}
 	}
-
 	float dr,dg,db;
 	double dt;
 	dr = abs(floorC.r - playerC.r);

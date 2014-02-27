@@ -118,7 +118,7 @@ void Floor::update(float dt)
 			setBoxColor(coloredBoxes[i]);
 			currentLength -= floor[i].getSize().z;
 			zPos += currentLength + (length / 2.0f);
-			floor[i].setPosition(Vector3(0, -1, zPos));
+			floor[i].setPosition(Vector3(0, -2, zPos));
 			floor[i].setSize(Vector3(width, height, length));
 			currentLength += length;
 		}

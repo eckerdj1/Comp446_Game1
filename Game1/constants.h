@@ -73,5 +73,6 @@ const char SOUND_BANK[] = "audio\\Win\\Sound Bank.xsb";
 const char MAIN_TRACK[] = "main";
 const char GAME_OVER[] = "gameOver";
 const char WOOSH[] = "woosh";
+const char MATCH[] = "match";
 
 #endif

@@ -133,11 +133,11 @@ void GameObject::deleteBox()
 
 bool GameObject::contains(Vector3 point)
 {
-	if (point.z > position.z - xRadius() && point.z < position.z + xRadius())
+	if (point.z >= position.z - xRadius() && point.z <= position.z + xRadius())
 	{
-		if (point.y > position.y - xRadius() && point.y < position.y + xRadius())
+		if (point.y >= position.y - xRadius() && point.y <= position.y + xRadius())
 		{
-			if (point.x > position.x - xRadius() && point.x < position.x + xRadius())
+			if (point.x >= position.x - xRadius() && point.x <= position.x + xRadius())
 			{
 				return true;
 			}
