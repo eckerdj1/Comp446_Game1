@@ -321,6 +321,8 @@ void ColoredCubeApp::updateScene(float dt)
 		cursor.update(dt);
 
 		score.setMultiplier(getMultiplier());
+		score.addPoints(1); 
+
 		if (getMultiplier() > 3.98) {
 			//audio->playCue(MATCH);
 		}
@@ -623,12 +625,17 @@ void ColoredCubeApp::setNewObstacleCluster()
 float ColoredCubeApp::getMultiplier() {
 	DXColor floorC = RED;
 	DXColor playerC = player.getColor();
-	
+
+	bool hit = false;
 	for(int i = 0; i < floor.size(); i++) {
 		if(floor.getTile(i)->contains(Vector3(0.0f,-2.0f,0.0f))) {
 			floorC = floor.getTile(i)->colorAtPoint(0.0f);
+			hit = true;
 		}
 	}
+	if(!hit)
+		return score.getMult();
+
 	float dr,dg,db;
 	double dt;
 	dr = abs(floorC.r - playerC.r);
