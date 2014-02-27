@@ -8,6 +8,7 @@ Player::Player()
 	color.b = 0.0f;
 
 	elapsed = 0.0f;
+	hoverTimer = 0.0f;
 	keyWaitTime = 0.127f;
 
 	speed = 0;
@@ -70,6 +71,12 @@ void Player::update(float dt)
 	if(input->isKeyDown(0x4C) || keyPressed(PlayerColorDownKey)) {
 		colorShiftUp(changeBy);
 	}
+
+	hoverTimer += dt * 2.7f;
+
+	float hoverHeight =  0.45f * cos(hoverTimer) +  2.0f;
+	position.y = hoverHeight;
+
 
 	box->releaseVBuffer();
 	box->setVertexColor(color, color);

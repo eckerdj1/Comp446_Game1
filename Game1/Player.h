@@ -49,6 +49,7 @@ private:
 	float radiusSquared;
 	float height;
 	float width;
+	float hoverTimer;
 
 	//Andy Miller
 	DXColor color;

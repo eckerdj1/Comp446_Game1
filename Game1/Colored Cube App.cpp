@@ -238,7 +238,7 @@ void ColoredCubeApp::initApp()
 	spectrum[5].init(&specHudBox[5], 1.0f,specPos + Vector3(10.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 	cursor.init(&cursorBox,1.0f,specPos + Vector3(-.80f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 
-	lineBox.init(md3dDevice, 2.67f, .15f, .15f, BLACK, BLACK);
+	lineBox.init(md3dDevice, 2.67f, .15f, .15f, BLACK, BLACK);  ///5.68
 	outline[0].init(&lineBox, 2.67f, Vector3(0, 5.68, -2.67), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
 	outline[1].init(&lineBox, 2.67f, Vector3(-2.67, 5.68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
 	outline[2].init(&lineBox, 2.67f, Vector3(2.67, 5.68, -.08), Vector3(0, 0, 0), 0.0f, Vector3(2.67, .15, .15));
@@ -293,7 +293,7 @@ void ColoredCubeApp::updateScene(float dt)
 		for (int i = 0; i < 11; i++) {
 			Vector3 oldPos = outline[i].getPosition();
 			Vector3 pPos = player.getPosition();
-			outline[i].setPosition(Vector3((pOldPos.x-oldPos.x)+pPos.x, oldPos.y, oldPos.z));
+			outline[i].setPosition(Vector3((pOldPos.x-oldPos.x)+pPos.x, (oldPos.y-pOldPos.y) + pPos.y, oldPos.z));
 		}
 
 		//new clustered cube code
@@ -345,6 +345,7 @@ void ColoredCubeApp::updateScene(float dt)
 				{
 					gameOver = true;
 					audio->playCue(GAME_OVER);
+					audio->stopCue(MAIN_TRACK);
 				}
 			}
 		}
