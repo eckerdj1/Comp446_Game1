@@ -22,7 +22,7 @@ void Score::draw()
 
 void Score::addPoints(int points)
 {
-	score += points;
+	score += points * multiplier;
 }
 
 void Score::subtractPoints(int points)

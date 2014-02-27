@@ -27,7 +27,8 @@ public:
 	int getInt();
 
 	void setMultiplier(float mult){multiplier = mult;}
-	
+	float getMult() {return multiplier;}
+
 private:
 	int score;
 	float multiplier;
