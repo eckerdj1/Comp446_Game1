@@ -118,7 +118,7 @@ void Floor::update(float dt)
 			setBoxColor(coloredBoxes[i]);
 			currentLength -= floor[i].getSize().z;
 			zPos += currentLength + (length / 2.0f);
-			floor[i].setPosition(Vector3(0, -1, zPos));
+			floor[i].setPosition(Vector3(0, -2, zPos));
 			floor[i].setSize(Vector3(width, height, length));
 			currentLength += length;
 		}
@@ -126,12 +126,13 @@ void Floor::update(float dt)
 	}
 }
 
-void Floor::draw(D3DXMATRIX view, D3DXMATRIX proj, ID3D10EffectMatrixVariable* mfxWVPVar, ID3D10EffectTechnique* tech)
+void Floor::draw(D3DXMATRIX view, D3DXMATRIX proj, ID3D10EffectMatrixVariable* mfxWVPVar, ID3D10EffectMatrixVariable* mfxWorldVar, ID3D10EffectTechnique* tech)
 {
 	for (int i=0; i<floor.size(); ++i)
 	{
 		mWVP = floor[i].getWorldMatrix() * view * proj;
 		mfxWVPVar->SetMatrix((float*)&mWVP);
+		mfxWorldVar->SetMatrix((float*)&floor[i].getWorldMatrix());
 		floor[i].setMTech(tech);
 		floor[i].draw();
 	}

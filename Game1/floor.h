@@ -22,7 +22,7 @@ public:
 	DXColor getRandomColor();
 
 	void update(float dt);
-	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
+	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
 
 	DXColor getColor1();
 	DXColor getColor2();

@@ -25,6 +25,9 @@
     <Filter Include="Header Files\Other">
       <UniqueIdentifier>{35c7348a-8b00-453e-8519-4fd870228f7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FX">
+      <UniqueIdentifier>{a0a7857b-9fad-4c95-8479-d62852ec8633}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp">
@@ -134,9 +137,20 @@
     <ClInclude Include="audio.h">
       <Filter>Header Files\DirectXStuff</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.fx" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="color.fx">
+      <Filter>FX</Filter>
+    </None>
+    <None Include="lighting.fx">
+      <Filter>FX</Filter>
+    </None>
+    <None Include="lighthelper.fx">
+      <Filter>FX</Filter>
+    </None>
   </ItemGroup>
 </Project>

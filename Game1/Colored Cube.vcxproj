@@ -116,6 +116,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineObject.h" />
     <ClInclude Include="Obstacle.h" />
@@ -129,6 +130,8 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="color.fx" />
+    <None Include="lighthelper.fx" />
+    <None Include="lighting.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
