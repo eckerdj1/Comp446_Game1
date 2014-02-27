@@ -86,6 +86,7 @@ private:
 	int ammo;
 	bool lifeGained;
 	bool activeMessage;
+	bool matchMade;
 	std::wstring message;
 	float messageTimer;
 
@@ -242,6 +243,7 @@ void ColoredCubeApp::initApp()
 
 	gameOver = false;
 	activeMessage = false;
+	matchMade = false;
 	messageTimer = 0.0f;
 
 	buildFX();
@@ -323,9 +325,14 @@ void ColoredCubeApp::updateScene(float dt)
 		score.setMultiplier(getMultiplier());
 		score.addPoints(1); 
 
-		if (getMultiplier() > 3.98) {
-			//audio->playCue(MATCH);
+		if (getMultiplier() > 3.98 && matchMade == false) {
+			audio->playCue(MATCH);
+			matchMade = true;
 		}
+		if (getMultiplier() <= 3.98 && matchMade == true) {
+			matchMade = false;
+		}
+
 
 		outline[0].update(dt);
 		outline[1].update(dt);
