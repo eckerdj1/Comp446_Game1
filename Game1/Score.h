@@ -26,10 +26,11 @@ public:
 	string getString();
 	int getInt();
 
+	void setMultiplier(float mult){multiplier = mult;}
 	
-
 private:
 	int score;
+	float multiplier;
 	string text;
 	ostringstream out;
 

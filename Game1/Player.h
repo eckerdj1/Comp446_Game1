@@ -33,6 +33,7 @@ public:
 	float zRadius();
 	float getWheelVal() {return wheelVal;}
 	Vector3 getPosition() {return position;}
+	DXColor getColor() {return color;}
 
 private:
 	Box* box;

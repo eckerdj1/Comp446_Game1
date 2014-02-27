@@ -27,6 +27,8 @@ public:
 	DXColor getColor1();
 	DXColor getColor2();
 
+	GameObject* getTile(int i) {return &floor[i];}
+
 private:
 
 	float length;

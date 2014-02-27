@@ -3,6 +3,7 @@
 Score::Score()
 {
 	score = 0;
+	multiplier = 3.0f;
 }
 Score::~Score()
 {
@@ -32,7 +33,7 @@ void Score::subtractPoints(int points)
 string Score::getString()
 {
 	out.str("");
-	out << "Player Score: " << score;
+	out << "Player Score: " << score << "\nMultiplier: " << multiplier;
 	return out.str();
 }
 

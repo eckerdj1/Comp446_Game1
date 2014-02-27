@@ -19,12 +19,14 @@ wstring Text::toWString(string str)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	static wstring newStr = converter.from_bytes(str);
+	newStr = converter.from_bytes(str);
 	return newStr;
 }
 const wchar_t* Text::toWCString(string str)
 {	
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	static wstring newStr = converter.from_bytes(str);
+	newStr = converter.from_bytes(str);
 	return newStr.c_str();
 }
 string Text::toString(int n)

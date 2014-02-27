@@ -21,6 +21,7 @@
 #include "Obstacle.h"
 #include "Floor.h"
 
+#include <math.h>
 #include <ctime>
 #include <vector>
 #include <string>
@@ -51,15 +52,9 @@ private:
  
 private:
 
-	Quad quad1;
-	Line line;
-	Box whiteBox, redBox, blueBox, greenBox, crimBox, dRedBox, dBlueBox;
-	GameObject gameObject1, gameObject2, gameObject3, spinner;
 	vector<GameObject> fallingBlocks;
 	vector<GameObject> bullets;
-	LineObject xLine, yLine, zLine;
 	Vector3 left, right, forward, back, up, down, zero;
-
 
 	////// New Stuff added by Steve //////
 	Box playerBox;
@@ -67,7 +62,6 @@ private:
 	int numberOfObstacles;
 	vector<Box*> obstacleBoxes;
 	vector<Obstacle> obstacles;
-	Line rLine, gLine, bLine;
 	/////New obstacle code: Daniel J. Ecker////
 	float floorMovement;
 	int clusterSize, clusterSizeVariation, clusterSeparation;
@@ -102,6 +96,8 @@ private:
 	Box cursorBox;
 	GameObject spectrum[6];
 	GameObject cursor;
+
+	float getMultiplier();
 
 
 	ID3D10Effect* mFX;
@@ -173,29 +169,8 @@ void ColoredCubeApp::initApp()
 	up = Vector3(0,1,0);
 	down = Vector3(0,-1,0);
 	zero = Vector3(0,0,0);
-	
-	whiteBox.init(md3dDevice, 1.0f, WHITE);
-	redBox.init(md3dDevice, 1.0f, RED);
-	blueBox.init(md3dDevice, 1.0f, BLUE);
-	greenBox.init(md3dDevice, 1.0f, GREEN);
-	crimBox.init(md3dDevice, 0.8f, CRIMSON);
-	dRedBox.init(md3dDevice, 0.8f, DARKRED);
-	dBlueBox.init(md3dDevice, 0.25f, DARKBLUE);
-
-	line.init(md3dDevice, 10.0f, GREEN);
 
 	////// New Stuff added by Steve //////
-	gLine.init(md3dDevice, 10.0f, GREEN);
-	rLine.init(md3dDevice, 10.0f, RED);
-	bLine.init(md3dDevice, 10.0f, BLUE);
-	xLine.init(&rLine, Vector3(0,0,0), 10);
-	xLine.setPosition(Vector3(0,0,0));
-	yLine.init(&gLine, Vector3(0,0,0), 10);
-	yLine.setPosition(Vector3(0,0,0));
-	yLine.setRotationZ(ToRadian(90));
-	zLine.init(&bLine, Vector3(0,0,0), 10);
-	zLine.setPosition(Vector3(0,0,0));
-	zLine.setRotationY(ToRadian(90));
 	numberOfObstacles = 50;
 	float obstacleScale = 2.5f;
 	float playerScale = 2.67f;
@@ -248,11 +223,6 @@ void ColoredCubeApp::initApp()
 	spectrum[5].init(&specHudBox[5], 1.0f,specPos + Vector3(10.0f,0.0f,0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 	cursor.init(&cursorBox,1.0f,specPos + Vector3(-.80f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f), 0, Vector3(0.0f,0.0f,0.0f));
 
-
-	gameObject1.init(&whiteBox, sqrt(2.0f), Vector3(-10,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
-	gameObject2.init(&redBox, sqrt(2.0f), Vector3(4,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
-	gameObject3.init(&redBox, sqrt(2.0f), Vector3(-4,0,0), Vector3(0,0,0), 0,Vector3(2,2,2));
-
 	floor.init(md3dDevice);
 
 	gameOver = false;
@@ -279,7 +249,7 @@ void ColoredCubeApp::updateScene(float dt)
 	float gameTime = mTimer.getGameTime();
 
 
-	if (gameTime > 1.0f && !gameOver)
+	if (!gameOver)
 	{
 		////// New Stuff added by Steve //////
 		player.move(dt);
@@ -328,15 +298,10 @@ void ColoredCubeApp::updateScene(float dt)
 		cursor.setPosition(Vector3(10.2f,24.0f,-5.0f) + 2*Vector3(cursorPos, 0.0f, 0.0f));
 		cursor.update(dt);
 
+		score.setMultiplier(getMultiplier());
 
-		xLine.update(dt);
-		yLine.update(dt);
-		zLine.update(dt);
 		//////////////////////////////////////
 		// Floor test code //
-
-
-
 		/*for (int i=0; i<floor.size(); ++i)
 		{
 			floor[i].update(dt);
@@ -348,7 +313,6 @@ void ColoredCubeApp::updateScene(float dt)
 		floor.update(dt);
 	}
 
-	
 
 	// Build the view matrix.
 	D3DXVECTOR3 pos(0.0f,45.0f,-50.0f);
@@ -414,23 +378,6 @@ void ColoredCubeApp::drawScene()
 	mfxWVPVar->SetMatrix((float*)&mWVP);
 	cursor.setMTech(mTech);
 	cursor.draw();
-
-
-	mWVP = zLine.getWorldMatrix() *mView*mProj;
-	mfxWVPVar->SetMatrix((float*)&mWVP);
-	zLine.setMTech(mTech);
-	zLine.draw();
-
-	mWVP = yLine.getWorldMatrix() *mView*mProj;
-	mfxWVPVar->SetMatrix((float*)&mWVP);
-	yLine.setMTech(mTech);
-	yLine.draw();
-
-	mWVP = xLine.getWorldMatrix()*mView*mProj;
-	mfxWVPVar->SetMatrix((float*)&mWVP);
-	xLine.setMTech(mTech);
-	xLine.draw();
-
 	
 	//////////////////////////////////////
 
@@ -570,4 +517,29 @@ void ColoredCubeApp::setNewObstacleCluster()
 		currentZ += (int)(cubeSeparation + rand() % cubeJiggle);
 		cs--;
 	}
+}
+
+float ColoredCubeApp::getMultiplier() {
+	DXColor floorC = RED;
+	DXColor playerC = player.getColor();
+	
+	for(int i = 0; i < floor.size(); i++) {
+		if(floor.getTile(i)->contains(Vector3(0.0f,-2.0f,0.0f))) {
+			floorC = floor.getTile(i)->colorAtPoint(0.0f);
+		}
+	}
+
+	float dr,dg,db;
+	double dt;
+	dr = abs(floorC.r - playerC.r);
+	dg = abs(floorC.g - playerC.g);
+	db = abs(floorC.b - playerC.b);
+	
+	dt = dr + dg + db;
+	dt *= 10;
+	int t = (int)dt;
+	dt = (double)t/10;
+
+	float mult = 4 - dt;
+	return mult;
 }
