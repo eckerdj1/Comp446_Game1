@@ -89,6 +89,9 @@ private:
 	float bulletsPerSecond;
 
 	float floorSectionLength;
+	int floorClusterCounter;
+	int floorClusterThreshold;
+	int floorSpeedIncrease;
 	
 
 	int playerBlock;
@@ -212,7 +215,7 @@ void ColoredCubeApp::initApp()
 	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	Vector3 pScale(playerScale, playerScale, playerScale);
 	playerBox.init(md3dDevice, playerScale, WHITE);
-	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, pScale, audio);
+	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 3, 0), Vector3(0, 0, 0), 10, pScale, audio);
 	player.linkInput(input);
 
 	int posZ = 0;
@@ -239,6 +242,11 @@ void ColoredCubeApp::initApp()
 	cubeJiggle = 3;
 	clusterJiggle = 10;
 	floorMovement = 0.0f;
+
+	//Other floor variables
+	floorClusterCounter = 0;
+	floorClusterThreshold = 7;
+	floorSpeedIncrease = 5;
 
 	//New spectrum HUD by Andy
 	specHudBox[0].init(md3dDevice, .5f, 1.0f, 1.0f, RED, YELLOW);
@@ -319,6 +327,19 @@ void ColoredCubeApp::updateScene(float dt)
 		{
 			floorMovement = 0.0f;
 			setNewObstacleCluster();
+			floorClusterCounter++;
+			
+		}
+		if (floorClusterCounter > floorClusterThreshold)
+		{
+			floorClusterCounter = 0;
+			floor.addSpeed((float)floorSpeedIncrease);
+			clusterSeparation--;
+			cubeSeparation--;
+			if (cubeSeparation < 12)
+				cubeSeparation = 12;
+			if (clusterSeparation < cubeSeparation * (clusterSize + clusterSizeVariation / 2))
+				clusterSeparation = cubeSeparation * (clusterSize + clusterSizeVariation / 2);
 		}
 
 		for (int i = 0; i < numberOfObstacles; i++) {

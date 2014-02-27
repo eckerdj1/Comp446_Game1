@@ -9,6 +9,8 @@ Floor::Floor() {
 	width = 30.0f;
 	length = 40.0f;
 	height = 1.95f;
+	fudgeFactor = 1.001f;
+
 	solidLengthSpan = 25;
 	solidMinLength = 25.0f;
 	gradientLengthSpan = 15;
@@ -36,7 +38,7 @@ void Floor::init(ID3D10Device* device)
 		if (coloredBoxes.size() % 2 == 0) // solid color
 		{
 			length = rand() % solidLengthSpan + solidMinLength;
-			box->init(device, width / 2.0f, height / 2.0f, length / 2.0f, currentColor, currentColor);
+			box->init(device, width / 2.0f, height / 2.0f, length / 1.999f, currentColor, currentColor);
 			previousColor = currentColor;
 		}
 		else // gradient color change
