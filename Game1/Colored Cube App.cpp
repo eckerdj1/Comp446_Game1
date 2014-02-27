@@ -79,6 +79,9 @@ private:
 	float bulletsPerSecond;
 
 	float floorSectionLength;
+	int floorClusterCounter;
+	int floorClusterThreshold;
+	int floorSpeedIncrease;
 	
 
 	int playerBlock;
@@ -90,6 +93,9 @@ private:
 	std::wstring message;
 	float messageTimer;
 
+
+	float totalDist;
+	bool distSet;
 	Score score;
 
 	bool gameOver;
@@ -201,12 +207,18 @@ void ColoredCubeApp::initApp()
 	///Set obstacle cluster variables
 	clusterSize = 1;
 	clusterSizeVariation = 3;
-	clusterSeparation = 50;
+	clusterSeparation = 100;
 	cubeSeparation = 30;
 	lineJiggle = 3;
 	cubeJiggle = 3;
 	clusterJiggle = 10;
 	floorMovement = 0.0f;
+
+	floorClusterCounter = 0;
+	floorClusterThreshold = 7;
+	floorSpeedIncrease = 5;
+
+
 
 	//New spectrum HUD by Andy
 	specHudBox[0].init(md3dDevice, .5f, 1.0f, 1.0f, RED, YELLOW);
@@ -245,6 +257,11 @@ void ColoredCubeApp::initApp()
 	activeMessage = false;
 	matchMade = false;
 	messageTimer = 0.0f;
+
+	totalDist = 0.0f;
+	distSet = false;
+
+
 
 	buildFX();
 	buildVertexLayouts();
@@ -285,7 +302,25 @@ void ColoredCubeApp::updateScene(float dt)
 		{
 			floorMovement = 0.0f;
 			setNewObstacleCluster();
+			floorClusterCounter++;
 		}
+		if (floorClusterCounter > floorClusterThreshold)
+		{
+			floorClusterCounter = 0;
+			floor.addSpeed((float)floorSpeedIncrease);
+			clusterSeparation--;
+			cubeSeparation--;
+			if (cubeSeparation < 12)
+				cubeSeparation = 12;
+			if (clusterSeparation < cubeSeparation * (clusterSize + clusterSizeVariation / 2))
+				clusterSeparation = cubeSeparation * (clusterSize + clusterSizeVariation / 2);
+		}
+
+
+
+
+
+
 
 		for (int i = 0; i < numberOfObstacles; i++) {
 			obstacles[i].setSpeed(floor.getSpeed());
@@ -322,15 +357,31 @@ void ColoredCubeApp::updateScene(float dt)
 		cursor.setPosition(Vector3(10.2f,24.0f,-5.0f) + 2*Vector3(cursorPos, 0.0f, 0.0f));
 		cursor.update(dt);
 
-		score.setMultiplier(getMultiplier());
-		score.addPoints(1); 
-
-		if (getMultiplier() > 3.98 && matchMade == false) {
-			audio->playCue(MATCH);
-			matchMade = true;
+		totalDist += floor.getSpeed() * dt;
+		if(!distSet && ((int)totalDist % 6) == 0) {
+			score.setMultiplier(getMultiplier());
+			score.addPoints(1); 
+			distSet = true;
+			if (getMultiplier() > 3.98 && matchMade == false) {
+				audio->playCue(MATCH);
+				matchMade = true;
+				message = L"Perfect Match!";
+				activeMessage = true;
+			}
+			if (getMultiplier() <= 3.98 && matchMade == true) {
+				matchMade = false;
+			}
 		}
-		if (getMultiplier() <= 3.98 && matchMade == true) {
-			matchMade = false;
+		if (distSet && ((int)totalDist % 6) == 1)
+		{
+			distSet = false;
+		}
+		if ((int)totalDist % 600 == 0)
+		{
+			activeMessage = true;
+			wostringstream o;
+			o << (int)totalDist / 6 << " feet!";
+			message = o.str();
 		}
 
 
@@ -357,6 +408,16 @@ void ColoredCubeApp::updateScene(float dt)
 		}*/
 		//Changes By: Daniel J. Ecker
 		floor.update(dt);
+
+		if (activeMessage)
+		{
+			messageTimer += dt;
+			if (messageTimer > 4.7f)
+			{
+				messageTimer = 0.0f;
+				activeMessage = false;
+			}
+		}
 	}
 
 

@@ -17,6 +17,8 @@ public:
 	void init(ID3D10Device* device);
 	void setSpeed(float s) {floorSpeed = s;}
 	float getSpeed() {return floorSpeed;}
+	void addSpeed(float speed) {floorSpeed += speed;}
+
 	int size() {return floor.size();}
 	GameObject section(int i) {return floor[i];}
 	DXColor getRandomColor();

@@ -122,6 +122,7 @@ void Floor::update(float dt)
 			floor[i].setSize(Vector3(width, height, length));
 			currentLength += length;
 		}
+		floor[i].setSpeed(floorSpeed);
 		floor[i].update(dt);
 	}
 }
