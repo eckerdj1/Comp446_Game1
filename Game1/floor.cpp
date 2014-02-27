@@ -9,6 +9,7 @@ Floor::Floor() {
 	width = 30.0f;
 	length = 40.0f;
 	height = 1.95f;
+
 	solidLengthSpan = 25;
 	solidMinLength = 25.0f;
 	gradientLengthSpan = 15;
@@ -127,12 +128,13 @@ void Floor::update(float dt)
 	}
 }
 
-void Floor::draw(D3DXMATRIX view, D3DXMATRIX proj, ID3D10EffectMatrixVariable* mfxWVPVar, ID3D10EffectTechnique* tech)
+void Floor::draw(D3DXMATRIX view, D3DXMATRIX proj, ID3D10EffectMatrixVariable* mfxWVPVar, ID3D10EffectMatrixVariable* mfxWorldVar, ID3D10EffectTechnique* tech)
 {
 	for (int i=0; i<floor.size(); ++i)
 	{
 		mWVP = floor[i].getWorldMatrix() * view * proj;
 		mfxWVPVar->SetMatrix((float*)&mWVP);
+		mfxWorldVar->SetMatrix((float*)&floor[i].getWorldMatrix());
 		floor[i].setMTech(tech);
 		floor[i].draw();
 	}

@@ -20,6 +20,7 @@
 #include "Player.h"
 #include "Obstacle.h"
 #include "Floor.h"
+#include "Light.h"
 
 #include <math.h>
 #include <ctime>
@@ -72,6 +73,11 @@ private:
 	///Floor
 	Floor floor;
 
+	//Lighting
+	vector<Light> lights;
+	int numberOfLights;
+	int lightType; // 0-parallel, 1-pointlight, 2-spotlight
+
 	float fallRatePerSecond;
 	float avgFallSpeed;
 	float elapsed;
@@ -113,8 +119,12 @@ private:
 	ID3D10EffectTechnique* mTech;
 	ID3D10InputLayout* mVertexLayout;
 	ID3D10EffectMatrixVariable* mfxWVPVar;
-	//my addition
-	ID3D10EffectVariable* mfxFLIPVar;
+	//light variables
+	ID3D10EffectMatrixVariable* mfxWorldVar;
+	ID3D10EffectVariable* mfxEyePosVar;
+	ID3D10EffectVariable* mfxLightVar;
+	ID3D10EffectScalarVariable* mfxLightType;
+
 
 	D3DXMATRIX mView;
 	D3DXMATRIX mProj;
@@ -214,6 +224,7 @@ void ColoredCubeApp::initApp()
 	clusterJiggle = 10;
 	floorMovement = 0.0f;
 
+	//Other floor variables
 	floorClusterCounter = 0;
 	floorClusterThreshold = 7;
 	floorSpeedIncrease = 5;
@@ -261,6 +272,24 @@ void ColoredCubeApp::initApp()
 	totalDist = 0.0f;
 	distSet = false;
 
+
+
+	//init lights - using pointlights
+	lightType = 1;
+	numberOfLights = 1;
+	for (int i=0; i<numberOfLights; ++i)
+	{
+		Light l;
+		l.pos = Vector3(0, 50, -17);
+		l.ambient = Color(0.67f, 0.67f, 0.67f);
+		l.diffuse = Color(1.0f, 1.0f, 1.0f);
+		l.specular = Color(1.0f, 1.0f, 1.0f);
+		l.att.x = 1.5f;
+		l.att.y = 0.0f;
+		l.att.z = 0.0f;
+		l.range = 97.0f;
+		lights.push_back(l);
+	}
 
 
 	buildFX();
@@ -398,8 +427,6 @@ void ColoredCubeApp::updateScene(float dt)
 		outline[9].update(dt);
 		outline[10].update(dt);
 
-		//////////////////////////////////////
-		// Floor test code //
 		/*for (int i=0; i<floor.size(); ++i)
 		{
 			floor[i].update(dt);
@@ -441,51 +468,56 @@ void ColoredCubeApp::drawScene()
 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	md3dDevice->OMSetBlendState(0, blendFactors, 0xffffffff);
     md3dDevice->IASetInputLayout(mVertexLayout);
+	
+	D3DXVECTOR3 pos(0.0f,45.0f,-50.0f);
+	// set lighting shader variables
+	mfxEyePosVar->SetRawValue(&pos, 0, sizeof(Vector3));
+	mfxLightVar->SetRawValue(&lights[0], 0, sizeof(Light));
+	mfxLightType->SetInt(lightType);
 
 	// set some variables for the shader
-	int foo[1];
-	foo[0] = 0;
 	// set the point to the shader technique
 	D3D10_TECHNIQUE_DESC techDesc;
 	mTech->GetDesc(&techDesc);
 
+
 	//setting the color flip variable in the shader
-	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 
 	//draw the floor
-	foo[0] = 0;
-	mfxFLIPVar->SetRawValue(&foo[0], 0 , sizeof(int));
-	floor.draw(mView, mProj, mfxWVPVar, mTech);
+	floor.draw(mView, mProj, mfxWVPVar, mfxWorldVar, mTech);
 
 	////// New Stuff added by Steve //////
 	mWVP = player.getWorldMatrix()  *mView*mProj;
 	mfxWVPVar->SetMatrix((float*)&mWVP);
+	mfxWorldVar->SetMatrix((float*)&player.getWorldMatrix());
 	player.setMTech(mTech);
 	player.draw();
 
 	for (int i = 0; i < numberOfObstacles; i++) {
-		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 		mWVP = obstacles[i].getWorldMatrix() * mView * mProj;
 		mfxWVPVar->SetMatrix((float*)&mWVP);
+		mfxWorldVar->SetMatrix((float*)&obstacles[i].getWorldMatrix());
 		obstacles[i].setMTech(mTech);
 		obstacles[i].draw();
 	}
 
 	//Spectrum HUD
 	for(int i = 0; i < 6; i++) {
-		mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 		D3DXMATRIX a;
 		D3DXMatrixRotationY(&a, 1.573f);
 		mWVP = a * spectrum[i].getWorldMatrix() * mView * mProj;
 		mfxWVPVar->SetMatrix((float*)&mWVP);
+		mfxWorldVar->SetMatrix((float*)&spectrum[i].getWorldMatrix());
 		spectrum[i].setMTech(mTech);
 		spectrum[i].draw();
 	}
-	mfxFLIPVar->SetRawValue(&foo[0], 0, sizeof(int));
 	mWVP = cursor.getWorldMatrix() * mView * mProj;
 	mfxWVPVar->SetMatrix((float*)&mWVP);
+	mfxWorldVar->SetMatrix((float*)&cursor.getWorldMatrix());
 	cursor.setMTech(mTech);
 	cursor.draw();
+
+
 	
 	//////////////////////////////////////
 
@@ -606,7 +638,7 @@ void ColoredCubeApp::buildFX()
  
 	ID3D10Blob* compilationErrors = 0;
 	HRESULT hr = 0;
-	hr = D3DX10CreateEffectFromFile(L"color.fx", 0, 0, 
+	hr = D3DX10CreateEffectFromFile(L"lighting.fx", 0, 0, 
 		"fx_4_0", shaderFlags, 0, md3dDevice, 0, 0, &mFX, &compilationErrors, 0);
 	if(FAILED(hr))
 	{
@@ -618,10 +650,14 @@ void ColoredCubeApp::buildFX()
 		DXTrace(__FILE__, (DWORD)__LINE__, hr, L"D3DX10CreateEffectFromFile", true);
 	} 
 
-	mTech = mFX->GetTechniqueByName("ColorTech");
+	mTech = mFX->GetTechniqueByName("LightTech");
 	
 	mfxWVPVar = mFX->GetVariableByName("gWVP")->AsMatrix();
-	mfxFLIPVar = mFX->GetVariableByName("flip");
+	mfxWorldVar  = mFX->GetVariableByName("gWorld")->AsMatrix();
+	mfxEyePosVar = mFX->GetVariableByName("gEyePosW");
+	mfxLightVar = mFX->GetVariableByName("gLight");
+	mfxLightType = mFX->GetVariableByName("gLightType")->AsScalar();
+	//mfxFLIPVar = mFX->GetVariableByName("flip");
 
 }
 
@@ -630,14 +666,16 @@ void ColoredCubeApp::buildVertexLayouts()
 	// Create the vertex input layout.
 	D3D10_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0}
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"DIFFUSE",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"SPECULAR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D10_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	// Create the input layout
     D3D10_PASS_DESC PassDesc;
     mTech->GetPassByIndex(0)->GetDesc(&PassDesc);
-    HR(md3dDevice->CreateInputLayout(vertexDesc, 2, PassDesc.pIAInputSignature,
+    HR(md3dDevice->CreateInputLayout(vertexDesc, 4, PassDesc.pIAInputSignature,
 		PassDesc.IAInputSignatureSize, &mVertexLayout));
 }
  

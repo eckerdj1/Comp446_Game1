@@ -16,15 +16,14 @@ public:
 
 	void init(ID3D10Device* device);
 	void setSpeed(float s) {floorSpeed = s;}
+	void addSpeed(float i) {floorSpeed += i;}
 	float getSpeed() {return floorSpeed;}
-	void addSpeed(float speed) {floorSpeed += speed;}
-
 	int size() {return floor.size();}
 	GameObject section(int i) {return floor[i];}
 	DXColor getRandomColor();
 
 	void update(float dt);
-	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
+	void draw(D3DXMATRIX, D3DXMATRIX, ID3D10EffectMatrixVariable*, ID3D10EffectMatrixVariable*, ID3D10EffectTechnique*);
 
 	DXColor getColor1();
 	DXColor getColor2();
