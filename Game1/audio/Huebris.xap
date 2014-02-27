@@ -227,10 +227,10 @@ Wave Bank
     Compression Preset Name = <none>;
     Xbox Bank Last Modified Low = 0;
     Xbox Bank Last Modified High = 0;
-    PC Bank Last Modified Low = 1058285445;
-    PC Bank Last Modified High = 30356351;
-    Bank Last Revised Low = 351822648;
-    Bank Last Revised High = 30356350;
+    PC Bank Last Modified Low = 497955551;
+    PC Bank Last Modified High = 30356358;
+    Bank Last Revised Low = 425681099;
+    Bank Last Revised High = 30356358;
 
     Wave
     {
@@ -296,8 +296,31 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 992118829;
-            Last Modified High = 30356351;
+            Last Modified Low = 756717402;
+            Last Modified High = 30356352;
+        }
+    }
+
+    Wave
+    {
+        Name = match;
+        File = match.wav;
+        Build Settings Last Modified Low = 399505865;
+        Build Settings Last Modified High = 30356358;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
+            Play Region Offset = 44;
+            Play Region Length = 423364;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 1016051476;
+            Last Modified High = 30356357;
         }
     }
 }
@@ -309,8 +332,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 455102975;
-    Bank Last Modified High = 30356350;
+    Bank Last Modified Low = 500326025;
+    Bank Last Modified High = 30356358;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
@@ -455,6 +478,53 @@ Sound Bank
         }
     }
 
+    Sound
+    {
+        Name = match;
+        Volume = -1200;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        Track
+        {
+            Volume = 0;
+            Use Filter = 0;
+
+            Play Wave Event
+            {
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaker Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = Wave Bank;
+                    Bank Index = 0;
+                    Entry Name = match;
+                    Entry Index = 3;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+        }
+    }
+
     Cue
     {
         Name = main;
@@ -510,6 +580,26 @@ Sound Bank
         {
             Name = woosh;
             Index = 2;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = match;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = match;
+            Index = 3;
             Weight Min = 0;
             Weight Max = 255;
         }

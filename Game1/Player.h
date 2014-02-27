@@ -32,6 +32,7 @@ public:
 	float yRadius();
 	float zRadius();
 	float getWheelVal() {return wheelVal;}
+	Vector3 getPosition() {return position;}
 
 private:
 	Box* box;
