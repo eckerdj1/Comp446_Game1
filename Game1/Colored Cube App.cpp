@@ -196,7 +196,7 @@ void ColoredCubeApp::initApp()
 	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	Vector3 pScale(playerScale, playerScale, playerScale);
 	playerBox.init(md3dDevice, playerScale, WHITE);
-	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, pScale);
+	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, pScale, audio);
 	player.linkInput(input);
 
 	int posZ = 0;
@@ -543,6 +543,7 @@ void ColoredCubeApp::updateScene(float dt)
 				if (player.collided(&obstacles[i]))
 				{
 					gameOver = true;
+					audio->playCue(GAME_OVER);
 				}
 			}
 		}

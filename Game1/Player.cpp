@@ -48,7 +48,7 @@ void Player::draw()
 		/*box->draw();*/
 }
 
-void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, Vector3 sz)
+void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, Vector3 sz, Audio* audio)
 {
 	box = b;
 	radius = r;
@@ -58,6 +58,7 @@ void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, Vector3 s
 	speed = sp;
 	size = sz;
 	radiusSquared = radius * radius;
+	Player::audio = audio;
 }
 
 void Player::update(float dt)
@@ -151,10 +152,16 @@ void Player::move(float dt) {
 	if (keyPressed(PlayerLeftKey) && elapsed > keyWaitTime) {
 		lane--;
 		elapsed = 0.0f;
+		if (lane >= 0) {
+			audio->playCue(WOOSH);
+		}
 	}
 	if (keyPressed(PlayerRightKey) && elapsed > keyWaitTime) {
 		lane++;
 		elapsed = 0.0f;
+		if (lane <= 4) {
+			audio->playCue(WOOSH);
+		}
 	}
 	if (lane < 0)
 		lane = 0;

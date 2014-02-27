@@ -6,6 +6,7 @@
 #include "input.h"
 #include <math.h>
 #include <vector>
+#include "audio.h"
 using std::vector;
 
 class Player
@@ -14,7 +15,7 @@ public:
 	Player();
 	~Player(void);
 
-	void init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, Vector3 sz);
+	void init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, Vector3 sz, Audio* audio);
 	void update(float dt);
 	void draw();
 	void move(float dt);
@@ -33,6 +34,7 @@ public:
 
 private:
 	Box* box;
+	Audio* audio;
 	Vector3 position;
 	Vector3 direction;
 	Vector3 size;
