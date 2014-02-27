@@ -7,6 +7,9 @@ Player::Player()
 	color.g = 0.0f;
 	color.b = 0.0f;
 
+	elapsed = 0.0f;
+	keyWaitTime = 0.127f;
+
 	speed = 0;
 	active = true;
 	Identity(&world);
@@ -45,7 +48,7 @@ void Player::draw()
 		/*box->draw();*/
 }
 
-void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, float s)
+void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, Vector3 sz)
 {
 	box = b;
 	radius = r;
@@ -53,17 +56,17 @@ void Player::init(Box *b, float r, Vector3 pos, Vector3 dir, float sp, float s)
 	position = pos;
 	direction = dir;
 	speed = sp;
-	scale = s;
+	size = sz;
 	radiusSquared = radius * radius;
 }
 
 void Player::update(float dt)
 {
-	float changeBy = 0.05f;
-	if(input->wasKeyPressed(0x4A)) {
+	float changeBy = 0.003f;
+	if(input->isKeyDown(0x4A) || keyPressed(PlayerColorUpKey)) {
 		colorShiftUp(changeBy);
 	}
-	if(input->wasKeyPressed(0x4C)) {
+	if(input->isKeyDown(0x4C) || keyPressed(PlayerColorDownKey)) {
 		colorShiftDown(changeBy);
 	}
 
@@ -113,6 +116,7 @@ void Player::update(float dt)
 		if (color.b < 0)
 			color.b = 0.0f;
 	}*/	
+	box->releaseVBuffer();
 	box->setVertexColor(color, color);
 	
 	if (!active)
@@ -138,15 +142,19 @@ void Player::update(float dt)
 
 }
 
-void Player::move() {
+void Player::move(float dt) {
 
 	Vector3 dir = Vector3(0,0,0);
 
-	if (input->wasKeyPressed(PlayerLeftKey)) {
+	elapsed += dt;
+
+	if (keyPressed(PlayerLeftKey) && elapsed > keyWaitTime) {
 		lane--;
+		elapsed = 0.0f;
 	}
-	if (input->wasKeyPressed(PlayerRightKey)) {
+	if (keyPressed(PlayerRightKey) && elapsed > keyWaitTime) {
 		lane++;
+		elapsed = 0.0f;
 	}
 	if (lane < 0)
 		lane = 0;
@@ -167,15 +175,25 @@ void Player::move() {
 
 }
 
+bool Player::contains(Vector3 point)
+{
+	if (point.z > position.z - xRadius() && point.z < position.z + xRadius())
+	{
+		if (point.y > position.y - xRadius() && point.y < position.y + xRadius())
+		{
+			if (point.x > position.x - xRadius() && point.x < position.x + xRadius())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool Player::collided(GameObject *gameObject)
 {
-	if (!active || gameObject->isNotActive())
-		return false;
-	Vector3 diff = position - gameObject->getPosition();
-	float length = D3DXVec3LengthSq(&diff);
-	float radii = radiusSquared + gameObject->getRadiusSquare();
-	if (length <= radii)
-		return true;
+	
+
 	return false;
 }
 
@@ -263,4 +281,17 @@ void Player::colorShiftDown(float x) {
 		color.g = 0.0f;
 		color.b = 6.0f - wheelVal;
 	}
+}
+
+float Player::xRadius()
+{
+	return size.x / 2.0f;
+}
+float Player::yRadius()
+{
+	return size.y / 2.0f;
+}
+float Player::zRadius()
+{
+	return size.z / 2.0f;
 }

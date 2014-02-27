@@ -308,3 +308,8 @@ DXColor Box::getColor1() {
 DXColor Box::getColor2() {
 	return color2;
 }
+
+void Box::releaseVBuffer()
+{
+	mVB->Release();
+}

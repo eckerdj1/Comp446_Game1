@@ -36,7 +36,7 @@ private:
 	float height;
 	float floorSpeed;
 
-	Box* getNewBox();
+	void setBoxColor(Box* box);
 	
 	float screenLength, currentLength;
 	float getRandomRGB(float cSet = 2000.0f);

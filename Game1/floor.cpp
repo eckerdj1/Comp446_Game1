@@ -115,11 +115,7 @@ void Floor::update(float dt)
 		float zPos = floor[i].getPosition().z + floor[i].zRadius();
 		if (zPos < -30.0f)
 		{
-			floor[i].deleteBox();
-			delete coloredBoxes[i];
-			Box* b = getNewBox();
-			coloredBoxes[i] = b;
-			floor[i].setBox(b);
+			setBoxColor(coloredBoxes[i]);
 			currentLength -= floor[i].getSize().z;
 			zPos += currentLength + (length / 2.0f);
 			floor[i].setPosition(Vector3(0, -1, zPos));
@@ -141,10 +137,10 @@ void Floor::draw(D3DXMATRIX view, D3DXMATRIX proj, ID3D10EffectMatrixVariable* m
 	}
 }
 
-Box* Floor::getNewBox()
+void Floor::setBoxColor(Box* box)
 {
-	Box* box = new Box();
 	float r, g, b;
+	box->releaseVBuffer();
 	if (previousColor != currentColor) //next one is solid
 	{
 		length = rand() % solidLengthSpan + solidMinLength;
@@ -159,5 +155,4 @@ Box* Floor::getNewBox()
 		previousColor = currentColor;
 		currentColor = nextColor;
 	}
-	return box;
 }

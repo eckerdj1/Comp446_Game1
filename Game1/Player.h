@@ -14,10 +14,10 @@ public:
 	Player();
 	~Player(void);
 
-	void init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, float s);
+	void init(Box *b, float r, Vector3 pos, Vector3 vel, float sp, Vector3 sz);
 	void update(float dt);
 	void draw();
-	void move();
+	void move(float dt);
 	bool collided(GameObject *gameObject);
 	Matrix getWorldMatrix() {return world;}
 	void setMTech(ID3D10EffectTechnique* m){ mTech = m;}
@@ -25,11 +25,16 @@ public:
 	bool isActive() { return active; }
 	void linkInput(Input* in);
 	void normalizeDirection();
+	bool contains(Vector3);
+	float xRadius();
+	float yRadius();
+	float zRadius();
 
 private:
 	Box* box;
 	Vector3 position;
 	Vector3 direction;
+	Vector3 size;
 	float speed;
 	bool active;
 	Matrix world;
@@ -51,6 +56,8 @@ private:
 	int lane, oldLane;
 	float laneFudgeFactor;
 	float movingTo, distanceToNewPos;
+
+	float elapsed, keyWaitTime;
 	
 	vector<float> lanePositions;
 

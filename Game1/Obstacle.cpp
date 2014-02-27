@@ -24,5 +24,6 @@ void Obstacle::update(float dt) {
 
 void Obstacle::setColor(DXColor color)
 {
+	box->releaseVBuffer();
 	box->setVertexColor(color, color);
 }

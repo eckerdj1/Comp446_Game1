@@ -15,6 +15,8 @@
 #define ToRadian D3DXToRadian
 #define ToDegree D3DXToDegree
 #define Normalize D3DXVec3Normalize;
+#define keyPressed(x) GetAsyncKeyState(x)
+#define Color(x, y, z) DXColor(x, y, z, 1.0f)
 
 //-----------------------------------------------
 // Useful macros
@@ -45,6 +47,8 @@ const UCHAR PlayerBUpKey = 0x4F;		// O
 const UCHAR PlayerRDownKey = 0x4A;		// J
 const UCHAR PlayerGDownKey = 0x4B;		// K
 const UCHAR PlayerBDownKey = 0x4C;		// L
+const UCHAR PlayerColorUpKey = 0x4A;//0x57;	// W
+const UCHAR PlayerColorDownKey = 0x4C;//0x53;  // S
 
 //-----------------------------------------------
 //                  Constants

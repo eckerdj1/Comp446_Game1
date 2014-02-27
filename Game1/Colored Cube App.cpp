@@ -190,8 +190,9 @@ void ColoredCubeApp::initApp()
 	zLine.setRotationY(ToRadian(90));
 	numberOfObstacles = 50;
 	float obstacleScale = 2.5f;
+	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	playerBox.init(md3dDevice, obstacleScale, WHITE);
-	player.init(&playerBox, sqrt(obstacleScale * 2.0f), Vector3(0, 0, 0), Vector3(0, 0, 0), 10, 0);
+	player.init(&playerBox, sqrt(obstacleScale * 2.0f), Vector3(0, 1, 0), Vector3(0, 0, 0), 10, oScale);
 	player.linkInput(input);
 
 	int posZ = 0;
@@ -199,7 +200,6 @@ void ColoredCubeApp::initApp()
 	int chance = 0;
 	int r = 0;
 	float floorSpeed = floor.getSpeed();
-	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	for (int i=0; i<numberOfObstacles; ++i)
 	{	
 		Box* box = new Box();
@@ -214,7 +214,7 @@ void ColoredCubeApp::initApp()
 	clusterSize = 1;
 	clusterSizeVariation = 3;
 	clusterSeparation = 50;
-	cubeSeparation = 18;
+	cubeSeparation = 30;
 	lineJiggle = 3;
 	cubeJiggle = 3;
 	clusterJiggle = 10;
@@ -504,7 +504,7 @@ void ColoredCubeApp::updateScene(float dt)
 	
 	
 	////// New Stuff added by Steve //////
-	player.move();
+	player.move(dt);
 	player.update(dt);
 
 	//new clustered cube code
