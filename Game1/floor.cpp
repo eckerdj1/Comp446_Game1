@@ -53,7 +53,7 @@ void Floor::init(ID3D10Device* device)
 		coloredBoxes.push_back(box);
 
 		GameObject floorSection;
-		floorSection.init(coloredBoxes.back(), 1.0f, Vector3(0, -2, 10 + currentLength - (length / 2.0f)), Vector3(0, 0, -1), floorSpeed, Vector3(width, height,length));
+		floorSection.init(coloredBoxes.back(), 1.0f, Vector3(0, -2, -30 + currentLength - (length / 2.0f)), Vector3(0, 0, -1), floorSpeed, Vector3(width, height,length));
 		floor.push_back(floorSection);
 	}
 }
@@ -124,6 +124,7 @@ void Floor::update(float dt)
 			floor[i].setSize(Vector3(width, height, length));
 			currentLength += length;
 		}
+		floor[i].setSpeed(floorSpeed);
 		floor[i].update(dt);
 	}
 }

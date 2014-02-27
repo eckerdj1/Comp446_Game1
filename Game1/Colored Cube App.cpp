@@ -215,7 +215,7 @@ void ColoredCubeApp::initApp()
 	Vector3 oScale(obstacleScale, obstacleScale, obstacleScale);
 	Vector3 pScale(playerScale, playerScale, playerScale);
 	playerBox.init(md3dDevice, playerScale, WHITE);
-	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 3, 0), Vector3(0, 0, 0), 10, pScale, audio);
+	player.init(&playerBox, sqrt(playerScale * 2.0f), Vector3(0, 2, 0), Vector3(0, 0, 0), 10, pScale, audio);
 	player.linkInput(input);
 
 	int posZ = 0;
