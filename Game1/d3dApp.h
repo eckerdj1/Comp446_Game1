@@ -16,6 +16,8 @@
 #include "input.h"
 #include "graphics.h"
 #include "Text.h"
+#include "audio.h"
+#include <WinError.h>
 #include <string>
 #include <sstream>
 
@@ -39,6 +41,8 @@ public:
 	virtual void onResize();// reset projection/etc
 	virtual void updateScene(float dt);
 	virtual void drawScene(); 
+	// Return pointer to Audio.
+    Audio* getAudio()       {return audio;}
 	virtual LRESULT msgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 protected:
@@ -49,6 +53,7 @@ protected:
 
 	HINSTANCE mhAppInst;
 	HWND      mhMainWnd;
+	HRESULT   hr;
 	bool      mAppPaused;
 	bool      mMinimized;
 	bool      mMaximized;
@@ -56,6 +61,7 @@ protected:
 
 	GameTimer mTimer;
 	Input* input;
+	Audio* audio;
 	Text timesNew;
 	Text arial;
 	Text roboto;

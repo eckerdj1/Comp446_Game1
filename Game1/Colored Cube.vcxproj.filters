@@ -72,6 +72,9 @@
     <ClCompile Include="floor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>Header Files\DirectXStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

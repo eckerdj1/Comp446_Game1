@@ -32,6 +32,7 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 D3DApp::D3DApp(HINSTANCE hInstance)
 {
 	input = new Input();
+	audio = NULL;
 	mhAppInst   = hInstance;
 	mhMainWnd   = 0;
 	mAppPaused  = false;
@@ -64,6 +65,7 @@ D3DApp::~D3DApp()
 	ReleaseCOM(mDepthStencilBuffer);
 	ReleaseCOM(md3dDevice);
 	ReleaseCOM(mFont);
+	SAFE_DELETE(audio);
 }
 
 HINSTANCE D3DApp::getAppInst()
@@ -81,6 +83,8 @@ int D3DApp::run()
 	MSG msg = {0};
  
 	mTimer.reset();
+
+	audio->run();
 
 	while(msg.message != WM_QUIT)
 	{
@@ -125,6 +129,17 @@ void D3DApp::initApp()
 
 	D3DX10CreateFontIndirect(md3dDevice, &fontDesc, &mFont);
 
+	audio = new Audio();
+	if (*WAVE_BANK != '\0' && *SOUND_BANK != '\0')  // if sound files defined
+    {
+        if( FAILED( hr = audio->initialize() ) )
+        {
+            if( hr == HRESULT_FROM_WIN32( ERROR_FILE_NOT_FOUND ) )
+                throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize sound system because media file not found."));
+            else
+                throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize sound system."));
+        }
+    }
 	timesNew.init(L"Times New Roman", 24);
 	arial.init(L"Arial", 24);
 	roboto.init(L"Roboto", 24);

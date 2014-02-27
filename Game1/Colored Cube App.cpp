@@ -155,6 +155,8 @@ ColoredCubeApp::~ColoredCubeApp()
 void ColoredCubeApp::initApp()
 {
 	D3DApp::initApp();
+	
+	audio->playCue(MAIN_TRACK);
 
 	srand(time(0));
 
@@ -369,7 +371,6 @@ void ColoredCubeApp::onResize()
 void ColoredCubeApp::updateScene(float dt)
 {
 	D3DApp::updateScene(dt);
-	
 	/*Old Code that may still be useful//
 	//float gameTime = mTimer.getGameTime();
 	//if (input->wasKeyPressed(PlayerRightKey) || input->wasKeyPressed(VK_RIGHT))
@@ -703,7 +704,7 @@ void ColoredCubeApp::drawScene()
 	std::wostringstream outs;  
 	
 	outs.precision(6);
-	string Hud = score.getString() + "\nBlobs Available: " + toString(ammo) + "\nGallons Left: " + toString(lives);
+	string Hud = score.getString();
 
 	/*outs << score.getString() << L"\n";
 	outs << L"Blobs Available: " << ammo << L"\n";
@@ -716,17 +717,17 @@ void ColoredCubeApp::drawScene()
 		mFont->DrawText(0, L"Game Over!", -1, &R1, DT_CENTER | DT_VCENTER, BLACK);
 	}
 	float gameTime = mTimer.getGameTime();
-	if (gameTime < 4.5f)
+	if (gameTime < 3.0f)
 	{
-		mFont->DrawText(0, L"Move your Water Cannon LEFT and RIGHT with A & D or with arrows.", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
+		mFont->DrawText(0, L"Move your Box LEFT and RIGHT with A & D to avoid hitting the obstacles", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
+	}
+	else if (gameTime < 6.0f)
+	{
+		mFont->DrawText(0, L"Change the color of your Box by pressing the J and L keys.", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
 	}
 	else if (gameTime < 9.0f)
 	{
-		mFont->DrawText(0, L"Shoot enhanced water blobs at FALLING LAVA with the LEFT mouse button.", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
-	}
-	else if (gameTime < 14.0f)
-	{
-		mFont->DrawText(0, L"Water blobs are limited.  Use them wisely.\nDon't let all your water evaporate!", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
+		mFont->DrawText(0, L"The closer the color of your cube is to the floor, the higher the score multiplier!", -1, &R2, DT_CENTER | DT_VCENTER, BLACK);
 	}
 	if (activeMessage)
 	{

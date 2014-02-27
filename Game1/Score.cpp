@@ -32,7 +32,7 @@ void Score::subtractPoints(int points)
 string Score::getString()
 {
 	out.str("");
-	out << "Lava Blocks Destroyed: " << score;
+	out << "Player Score: " << score;
 	return out.str();
 }
 
