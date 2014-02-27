@@ -373,8 +373,8 @@ void ColoredCubeApp::updateScene(float dt)
 				floor[i].setPosition(Vector3(0, -2, zPos + floor.size() * floorSectionLength));
 		}*/
 		//Changes By: Daniel J. Ecker
-		floor.update(dt);
 	}
+	floor.update(dt);
 
 	
 
